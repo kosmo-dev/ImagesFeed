@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "LikeImageTapped.png",
+      "filename" : "LikeImageNoActive.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "LikeImageTapped@2x.png",
+      "filename" : "LikeImageNoActive@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

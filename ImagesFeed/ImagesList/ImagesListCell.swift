@@ -11,7 +11,7 @@ final class ImagesListCell: UITableViewCell {
 
     // MARK: - Outlets
     @IBOutlet private weak var cellImage: UIImageView!
-    @IBOutlet private weak var likeImage: UIImageView!
+    @IBOutlet weak var likeButton: UIButton!
     @IBOutlet private weak var gradientView: UIView!
     @IBOutlet private weak var dateLabel: UILabel!
 
@@ -47,7 +47,8 @@ final class ImagesListCell: UITableViewCell {
     func configureElements(image: UIImage, date: String, likeImage: UIImage) {
         cellImage.image = image
         dateLabel.text = date
-        self.likeImage.image = likeImage
+        likeButton.setImage(likeImage, for: .normal)
+        likeButton.setTitle("", for: .normal)
     }
 
     // MARK: - Private Methods

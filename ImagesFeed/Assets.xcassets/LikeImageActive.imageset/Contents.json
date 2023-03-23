@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "LikeImage.png",
+      "filename" : "LikeImageActive.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "LikeImage@2x.png",
+      "filename" : "LikeImageActive@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

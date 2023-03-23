@@ -50,8 +50,12 @@ extension ImagesListViewController: UITableViewDataSource {
         guard let image = UIImage(named: photoName) else {
             return 250
         }
-        let height = image.size.height + 16
-        return height
+        let imageWidth = image.size.width
+        let cellInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+        let tableViewCellWidth = tableView.bounds.width - cellInsets.left - cellInsets.right
+        let multiplier = tableViewCellWidth / imageWidth
+        let cellHeight = image.size.height * multiplier + cellInsets.top + cellInsets.bottom
+        return cellHeight
     }
 
     private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
@@ -60,7 +64,7 @@ extension ImagesListViewController: UITableViewDataSource {
             return
         }
         let date = dateFormatter.string(from: Date())
-        guard let likeImage = (indexPath.row % 2 == 0) ? UIImage(named: "LikeImage") : UIImage(named: "LikeImageTapped") else {
+        guard let likeImage = (indexPath.row % 2 == 0) ? UIImage(named: Constants.UIImages.LikeImageActive.rawValue) : UIImage(named: Constants.UIImages.LikeImageNoActive.rawValue) else {
             return
         }
         cell.configureElements(image: image, date: date, likeImage: likeImage)

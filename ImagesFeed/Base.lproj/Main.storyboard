@@ -29,37 +29,44 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="omN-Fr-gQm">
-                                                    <rect key="frame" x="16" y="8" width="343" height="234"/>
+                                                    <rect key="frame" x="16" y="4" width="343" height="242"/>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8yq-yB-zqR">
-                                                    <rect key="frame" x="16" y="212" width="343" height="30"/>
+                                                    <rect key="frame" x="16" y="216" width="343" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="ofQ-F9-UUB"/>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22 марта 2023" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PbZ-LT-51j">
-                                                    <rect key="frame" x="24" y="218" width="327" height="16"/>
+                                                    <rect key="frame" x="24" y="222" width="327" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LikeImage" translatesAutoresizingMaskIntoConstraints="NO" id="7mt-p2-w1c">
-                                                    <rect key="frame" x="318" y="20" width="29" height="26"/>
-                                                </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vpj-xn-42U">
+                                                    <rect key="frame" x="317" y="4" width="42" height="42"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="2Ok-Ps-TY4"/>
+                                                        <constraint firstAttribute="height" constant="42" id="QA7-VM-DZf"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" image="LikeImageActive"/>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
+                                                <constraint firstItem="omN-Fr-gQm" firstAttribute="trailing" secondItem="Vpj-xn-42U" secondAttribute="trailing" id="8Ij-ir-4cm"/>
                                                 <constraint firstItem="omN-Fr-gQm" firstAttribute="bottom" secondItem="8yq-yB-zqR" secondAttribute="bottom" id="8dq-h3-as2"/>
                                                 <constraint firstItem="8yq-yB-zqR" firstAttribute="bottom" secondItem="PbZ-LT-51j" secondAttribute="bottom" constant="8" id="EZa-jF-C9j"/>
                                                 <constraint firstItem="omN-Fr-gQm" firstAttribute="leading" secondItem="7Ug-pF-lFa" secondAttribute="leading" constant="16" id="I9k-Op-xAZ"/>
-                                                <constraint firstAttribute="bottom" secondItem="omN-Fr-gQm" secondAttribute="bottom" constant="8" id="Lmp-f0-nEG"/>
+                                                <constraint firstItem="Vpj-xn-42U" firstAttribute="top" secondItem="omN-Fr-gQm" secondAttribute="top" id="ISl-7l-lK7"/>
+                                                <constraint firstAttribute="bottom" secondItem="omN-Fr-gQm" secondAttribute="bottom" constant="4" id="Lmp-f0-nEG"/>
                                                 <constraint firstAttribute="trailing" secondItem="omN-Fr-gQm" secondAttribute="trailing" constant="16" id="Nal-XW-gbG"/>
                                                 <constraint firstItem="8yq-yB-zqR" firstAttribute="trailing" secondItem="PbZ-LT-51j" secondAttribute="trailing" constant="8" id="SOW-lH-Ppj"/>
-                                                <constraint firstItem="omN-Fr-gQm" firstAttribute="trailing" secondItem="7mt-p2-w1c" secondAttribute="trailing" constant="12" id="gmx-CW-Ce6"/>
+                                                <constraint firstItem="Vpj-xn-42U" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7Ug-pF-lFa" secondAttribute="leading" constant="20" symbolic="YES" id="T1Y-1Z-3u3"/>
                                                 <constraint firstItem="8yq-yB-zqR" firstAttribute="leading" secondItem="7Ug-pF-lFa" secondAttribute="leadingMargin" constant="-4" id="nQD-WC-EqQ"/>
-                                                <constraint firstItem="7mt-p2-w1c" firstAttribute="top" secondItem="omN-Fr-gQm" secondAttribute="top" constant="12" id="oP5-jX-sbd"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="8yq-yB-zqR" secondAttribute="trailing" constant="-4" id="opU-Vp-1Ob"/>
-                                                <constraint firstItem="omN-Fr-gQm" firstAttribute="top" secondItem="7Ug-pF-lFa" secondAttribute="top" constant="8" id="xBv-ik-BXQ"/>
+                                                <constraint firstItem="omN-Fr-gQm" firstAttribute="top" secondItem="7Ug-pF-lFa" secondAttribute="top" constant="4" id="xBv-ik-BXQ"/>
                                                 <constraint firstItem="PbZ-LT-51j" firstAttribute="leading" secondItem="8yq-yB-zqR" secondAttribute="leading" constant="8" id="y5S-Zp-hyI"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -68,7 +75,7 @@
                                             <outlet property="cellImage" destination="omN-Fr-gQm" id="xeb-zh-KXY"/>
                                             <outlet property="dateLabel" destination="PbZ-LT-51j" id="DKZ-w2-KQX"/>
                                             <outlet property="gradientView" destination="8yq-yB-zqR" id="ihk-8s-tg1"/>
-                                            <outlet property="likeImage" destination="7mt-p2-w1c" id="Vhj-bx-SgU"/>
+                                            <outlet property="likeButton" destination="Vpj-xn-42U" id="nQC-mn-Fg6"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -89,12 +96,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="350" y="-24"/>
+            <point key="canvasLocation" x="349.60000000000002" y="-24.384236453201972"/>
         </scene>
     </scenes>
     <resources>
         <image name="0" width="200" height="132"/>
-        <image name="LikeImage" width="29" height="26"/>
+        <image name="LikeImageActive" width="42" height="42"/>
         <namedColor name="YPBlack">
             <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
