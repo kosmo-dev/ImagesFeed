@@ -8,7 +8,6 @@
 import UIKit
 
 final class ImagesListViewController: UIViewController {
-
     // MARK: - Outlets
     @IBOutlet private weak var tableView: UITableView!
 

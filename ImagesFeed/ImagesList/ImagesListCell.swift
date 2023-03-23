@@ -18,10 +18,29 @@ final class ImagesListCell: UITableViewCell {
     // MARK: - Public Properties
     static let reuseIdentifier = "ImagesListCell"
 
+    // MARK: - Private Properties
+    private var gradient: CAGradientLayer {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.YPBlack.withAlphaComponent(0).cgColor, UIColor.YPBlack.cgColor]
+        gradient.startPoint = CGPoint(x: 0.5, y: 0)
+        gradient.endPoint = CGPoint(x: 0.5, y: 1)
+        gradient.locations = [0, 1]
+        gradient.opacity = 0.3
+        gradient.frame = gradientView.bounds
+        return gradient
+    }
+
     // MARK: - View Life Cycle
     override func awakeFromNib() {
         super.awakeFromNib()
         configureView()
+        layoutIfNeeded()
+        gradientView.layer.addSublayer(gradient)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradient.frame = gradientView.bounds
     }
 
     // MARK: - Public Methods
@@ -35,18 +54,6 @@ final class ImagesListCell: UITableViewCell {
     private func configureView() {
         cellImage.layer.cornerRadius = 16
         cellImage.layer.masksToBounds = true
-        configureGradient()
-    }
-
-    private func configureGradient() {
-        let gradient = CAGradientLayer()
-//        gradient.colors = [UIColor.YPBlack.withAlphaComponent(0).cgColor, UIColor.YPBlack.withAlphaComponent(0.2).cgColor]
-        gradient.colors = [UIColor.YPRed.cgColor, UIColor.YPBlue.cgColor]
-        gradient.startPoint = CGPoint(x: 0.5, y: 0)
-        gradient.endPoint = CGPoint(x: 0.5, y: 1)
-        gradient.locations = [0, 1]
-        gradient.frame = gradientView.bounds
-        gradientView.layer.addSublayer(gradient)
 
         gradientView.layer.cornerRadius = 16
         gradientView.clipsToBounds = true
