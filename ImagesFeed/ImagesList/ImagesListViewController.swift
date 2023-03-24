@@ -13,12 +13,9 @@ final class ImagesListViewController: UIViewController {
 
     // MARK: - Private Properties
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        return formatter
-    }()
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -64,7 +61,7 @@ extension ImagesListViewController: UITableViewDataSource {
             return
         }
         let date = dateFormatter.string(from: Date())
-        guard let likeImage = (indexPath.row % 2 == 0) ? UIImage(named: Constants.UIImages.LikeImageActive.rawValue) : UIImage(named: Constants.UIImages.LikeImageNoActive.rawValue) else {
+        guard let likeImage = (indexPath.row % 2 == 0) ? UIImage(named: Constants.UIImages.likeImageActive.rawValue) : UIImage(named: Constants.UIImages.likeImageNoActive.rawValue) else {
             return
         }
         cell.configureElements(image: image, date: date, likeImage: likeImage)
@@ -74,6 +71,16 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    }
+}
+
+// MARK: - DateFormatter
+extension ImagesListViewController {
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
     }
 }
 
