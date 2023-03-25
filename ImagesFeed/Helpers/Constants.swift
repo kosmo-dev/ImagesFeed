@@ -9,7 +9,7 @@ import Foundation
 
 enum Constants {
     enum UIImages: String {
-        case likeImageActive
-        case likeImageNoActive
+        case likeImageActive = "LikeImageActive"
+        case likeImageNoActive = "LikeImageNoActive"
     }
 }

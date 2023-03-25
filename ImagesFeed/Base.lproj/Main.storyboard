@@ -50,7 +50,7 @@
                                                         <constraint firstAttribute="height" constant="42" id="QA7-VM-DZf"/>
                                                     </constraints>
                                                     <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" image="likeImageActive"/>
+                                                    <buttonConfiguration key="configuration" style="plain" image="LikeImageActive"/>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -101,7 +101,7 @@
     </scenes>
     <resources>
         <image name="0" width="200" height="132"/>
-        <image name="likeImageActive" width="42" height="42"/>
+        <image name="LikeImageActive" width="42" height="42"/>
         <namedColor name="YPBlack">
             <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
