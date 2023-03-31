@@ -7,14 +7,14 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
 
     // MARK: - Outlets
-    @IBOutlet weak var profileImage: UIImageView!
-    @IBOutlet weak var profileName: UILabel!
-    @IBOutlet weak var profileUserName: UILabel!
-    @IBOutlet weak var profileDescription: UILabel!
-    @IBOutlet weak var exitButton: UIButton!
+    @IBOutlet private weak var profileImage: UIImageView!
+    @IBOutlet private weak var profileName: UILabel!
+    @IBOutlet private weak var profileUserName: UILabel!
+    @IBOutlet private weak var profileDescription: UILabel!
+    @IBOutlet private weak var exitButton: UIButton!
 
     // MARK: - Public Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -29,7 +29,7 @@ class ProfileViewController: UIViewController {
     }
 
     // MARK: - Actions
-    @IBAction func exitButtonTapped(_ sender: UIButton) {
+    @IBAction private func exitButtonTapped(_ sender: UIButton) {
         print("tapped")
     }
 }
