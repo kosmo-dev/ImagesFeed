@@ -15,5 +15,6 @@ enum Constants {
         case userPicture = "UserPicture"
         case tabBarProfile = "TabBarProfile"
         case tabBarMain = "TabBarMain"
+        case backward = "Backward"
     }
 }

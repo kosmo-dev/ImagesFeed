@@ -11,6 +11,7 @@ final class SingleImageViewController: UIViewController {
 
     // MARK: - Outlets
     @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet weak var backButton: UIButton!
 
     // MARK: - Public Properties
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -27,5 +28,13 @@ final class SingleImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = image
+        backButton.setTitle("", for: .normal)
+        backButton.imageView?.contentMode = .scaleAspectFill
     }
+
+    // MARK: - Actions
+    @IBAction func didTabBackButton(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
+
 }
