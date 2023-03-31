@@ -13,5 +13,7 @@ enum Constants {
         case likeImageNoActive = "LikeImageNoActive"
         case exitFromProfile = "ExitFromProfile"
         case userPicture = "UserPicture"
+        case tabBarProfile = "TabBarProfile"
+        case tabBarMain = "TabBarMain"
     }
 }
