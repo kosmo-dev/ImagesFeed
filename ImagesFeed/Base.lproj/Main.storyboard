@@ -150,7 +150,7 @@
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aiN-Br-Ljr"/>
-                        <color key="backgroundColor" name="YPBackground"/>
+                        <color key="backgroundColor" name="YPBlack"/>
                         <constraints>
                             <constraint firstItem="aiN-Br-Ljr" firstAttribute="trailing" secondItem="1Gr-VR-egi" secondAttribute="trailing" constant="26" id="5Yh-Fi-9EH"/>
                             <constraint firstItem="8kk-bZ-rpH" firstAttribute="top" secondItem="aiN-Br-Ljr" secondAttribute="top" constant="32" id="LCo-ZM-ph2"/>
@@ -181,7 +181,10 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="XSw-kd-CJA">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <tabBarAppearance key="standardAppearance">
+                            <color key="backgroundColor" name="YPBlack"/>
+                        </tabBarAppearance>
                     </tabBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="o6w-Od-Tch"/>
@@ -200,9 +203,6 @@
         <image name="TabBarMain" width="30" height="30"/>
         <image name="TabBarProfile" width="30" height="30"/>
         <image name="UserPicture" width="70" height="70"/>
-        <namedColor name="YPBackground">
-            <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="YPBlack">
             <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

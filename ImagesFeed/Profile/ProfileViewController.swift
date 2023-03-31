@@ -16,6 +16,11 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var profileDescription: UILabel!
     @IBOutlet weak var exitButton: UIButton!
 
+    // MARK: - Public Properties
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
