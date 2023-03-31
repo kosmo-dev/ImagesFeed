@@ -16,11 +16,16 @@ final class SingleImageViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
+    var image: UIImage! {
+        didSet {
+            guard isViewLoaded else { return }
+            imageView.image = image
+        }
+    }
 
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        imageView.image = image
     }
 }
