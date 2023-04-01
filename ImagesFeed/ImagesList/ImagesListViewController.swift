@@ -12,7 +12,7 @@ final class ImagesListViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
 
     // MARK: - Private Properties
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    private let photosName: [String] = Array(0..<21).map{ "\($0)" }
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent

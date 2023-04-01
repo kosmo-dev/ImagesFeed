@@ -30,6 +30,5 @@ final class ProfileViewController: UIViewController {
 
     // MARK: - Actions
     @IBAction private func exitButtonTapped(_ sender: UIButton) {
-        print("tapped")
     }
 }
