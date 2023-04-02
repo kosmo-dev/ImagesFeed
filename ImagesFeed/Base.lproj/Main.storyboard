@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="hqi-Nq-pPM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="hqi-Nq-pPM">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -126,7 +126,7 @@
                                 <viewLayoutGuide key="frameLayoutGuide" id="UXk-aD-UPt"/>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hDC-v4-oMB" customClass="CustomButton" customModule="ImagesFeed" customModuleProvider="target">
-                                <rect key="frame" x="9" y="58" width="24" height="24"/>
+                                <rect key="frame" x="9" y="11" width="24" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="24" id="S7G-jc-iXA"/>
                                     <constraint firstAttribute="height" constant="24" id="ssv-Le-pwT"/>
@@ -182,69 +182,10 @@
                     <view key="view" contentMode="scaleToFill" id="gmu-2H-N7p">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="UserPicture" translatesAutoresizingMaskIntoConstraints="NO" id="8kk-bZ-rpH">
-                                <rect key="frame" x="16" y="79" width="70" height="70"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="70" id="VVx-Rc-tw5"/>
-                                    <constraint firstAttribute="height" constant="70" id="lal-97-n3a"/>
-                                </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Gr-VR-egi">
-                                <rect key="frame" x="329" y="103" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="8vo-8B-Nwu"/>
-                                    <constraint firstAttribute="height" constant="22" id="wfB-Oh-yDO"/>
-                                </constraints>
-                                <buttonConfiguration key="configuration" style="plain" image="ExitFromProfile"/>
-                                <connections>
-                                    <action selector="exitButtonTapped:" destination="h5C-WX-KkT" eventType="touchUpInside" id="heI-xK-AR0"/>
-                                </connections>
-                            </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fJv-1t-2QB">
-                                <rect key="frame" x="16" y="157" width="343" height="75"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jane Doe" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIV-k1-nmq">
-                                        <rect key="frame" x="0.0" y="0.0" width="343" height="27.666666666666668"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@jane_doe" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WL3-Gg-o9h">
-                                        <rect key="frame" x="0.0" y="35.666666666666657" width="343" height="15.666666666666664"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" name="YPGray"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello, world!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zlL-Tm-8wc">
-                                        <rect key="frame" x="0.0" y="59.333333333333336" width="343" height="15.666666666666664"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="aiN-Br-Ljr"/>
                         <color key="backgroundColor" name="YPBlack"/>
-                        <constraints>
-                            <constraint firstItem="aiN-Br-Ljr" firstAttribute="trailing" secondItem="1Gr-VR-egi" secondAttribute="trailing" constant="26" id="5Yh-Fi-9EH"/>
-                            <constraint firstItem="8kk-bZ-rpH" firstAttribute="top" secondItem="aiN-Br-Ljr" secondAttribute="top" constant="32" id="LCo-ZM-ph2"/>
-                            <constraint firstItem="fJv-1t-2QB" firstAttribute="leading" secondItem="aiN-Br-Ljr" secondAttribute="leading" constant="16" id="VJw-h5-MiF"/>
-                            <constraint firstItem="8kk-bZ-rpH" firstAttribute="leading" secondItem="aiN-Br-Ljr" secondAttribute="leading" constant="16" id="d2C-2V-HYq"/>
-                            <constraint firstItem="aiN-Br-Ljr" firstAttribute="trailing" secondItem="fJv-1t-2QB" secondAttribute="trailing" constant="16" id="lYY-fd-MuL"/>
-                            <constraint firstItem="fJv-1t-2QB" firstAttribute="top" secondItem="8kk-bZ-rpH" secondAttribute="bottom" constant="8" id="wFj-Kg-tQT"/>
-                            <constraint firstItem="1Gr-VR-egi" firstAttribute="centerY" secondItem="8kk-bZ-rpH" secondAttribute="centerY" id="xWD-5D-xbc"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="TabBarProfile" id="BSW-Lx-tK0"/>
-                    <connections>
-                        <outlet property="exitButton" destination="1Gr-VR-egi" id="THB-83-GzC"/>
-                        <outlet property="profileDescription" destination="zlL-Tm-8wc" id="Xe3-9h-NUk"/>
-                        <outlet property="profileImage" destination="8kk-bZ-rpH" id="MIl-7k-iYL"/>
-                        <outlet property="profileName" destination="PIV-k1-nmq" id="YKg-H4-w1Y"/>
-                        <outlet property="profileUserName" destination="WL3-Gg-o9h" id="jfZ-jt-X8d"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JnC-7h-P19" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -275,17 +216,12 @@
     <resources>
         <image name="0" width="200" height="132"/>
         <image name="Backward" width="24" height="24"/>
-        <image name="ExitFromProfile" width="20" height="22"/>
         <image name="LikeImageActive" width="42" height="42"/>
         <image name="Sharing" width="50" height="50"/>
         <image name="TabBarMain" width="30" height="30"/>
         <image name="TabBarProfile" width="30" height="30"/>
-        <image name="UserPicture" width="70" height="70"/>
         <namedColor name="YPBlack">
             <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="YPGray">
-            <color red="0.68199998140335083" green="0.68599998950958252" blue="0.70599997043609619" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>
