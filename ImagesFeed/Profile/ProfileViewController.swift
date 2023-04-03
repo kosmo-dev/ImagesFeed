@@ -14,32 +14,15 @@ final class ProfileViewController: UIViewController {
         return .lightContent
     }
 
-    // MARK: - View Life Cycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        view.addSubview(imageView)
-        view.addSubview(nameLabel)
-        view.addSubview(loginLabel)
-        view.addSubview(descriptionLabel)
-        view.addSubview(exitButton)
-
-        configureConstraints()
-    }
-
-    // MARK: - Methods
-    @objc private func exitButtonTapped() {
-    }
-
-    // MARK: - Layout
-    private var imageView: UIImageView = {
+    // MARK: - Private Properties
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: Constants.UIImages.userPicture.rawValue)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
 
-    private var nameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.text = "Jane Doe"
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
@@ -48,7 +31,7 @@ final class ProfileViewController: UIViewController {
         return nameLabel
     }()
 
-    private var loginLabel: UILabel = {
+    private let loginLabel: UILabel = {
         let loginLabel = UILabel()
         loginLabel.text = "@jane_doe"
         loginLabel.font = UIFont.systemFont(ofSize: 13)
@@ -57,7 +40,7 @@ final class ProfileViewController: UIViewController {
         return loginLabel
     }()
 
-    private var descriptionLabel: UILabel = {
+    private let descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
         descriptionLabel.text = "Hello, World!"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13)
@@ -66,7 +49,7 @@ final class ProfileViewController: UIViewController {
         return descriptionLabel
     }()
 
-    private var exitButton: UIButton = {
+    private let exitButton: UIButton = {
         let image = UIImage(systemName: "ipad.and.arrow.forward") ?? UIImage()
         let exitButton = UIButton.systemButton(with: image, target: nil, action: #selector(exitButtonTapped))
         exitButton.imageView?.contentMode = .scaleAspectFill
@@ -74,6 +57,19 @@ final class ProfileViewController: UIViewController {
         exitButton.translatesAutoresizingMaskIntoConstraints = false
         return exitButton
     }()
+
+    // MARK: - View Life Cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
+
+        configureConstraints()
+    }
+
+    // MARK: - Methods
+    @objc private func exitButtonTapped() {
+    }
 
     private func configureConstraints() {
         NSLayoutConstraint.activate([

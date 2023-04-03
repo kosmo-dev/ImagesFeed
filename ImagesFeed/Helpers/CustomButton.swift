@@ -17,10 +17,12 @@ final class CustomButton: UIButton {
         isUserInteractionEnabled = false
         UIView.animate(withDuration: 0.08, delay: 0, options: .curveLinear) {
             self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        } completion: { _ in
+        } completion: { [weak self] _ in
             UIView.animate(withDuration: 0.08, delay: 0, options: .curveLinear) {
+                guard let self else { return }
                 self.transform = CGAffineTransform.identity
-            } completion: { _ in
+            } completion: { [weak self] _ in
+                guard let self else { return }
                 self.isUserInteractionEnabled = true
             }
         }

@@ -46,10 +46,10 @@ final class SingleImageViewController: UIViewController {
     }
 
     // MARK: - Actions
-    @IBAction func didTabBackButton(_ sender: UIButton) {
+    @IBAction private func didTabBackButton(_ sender: UIButton) {
         dismiss(animated: true)
     }
-    @IBAction func didTapSharingButtom(_ sender: UIButton) {
+    @IBAction private func didTapSharingButtom(_ sender: UIButton) {
         guard let image else { return }
         let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityViewController, animated: true)
