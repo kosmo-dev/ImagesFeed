@@ -76,7 +76,7 @@ extension ImagesListViewController: UITableViewDataSource {
             return
         }
         let date = dateFormatter.string(from: Date())
-        guard let likeImage = (indexPath.row % 2 == 0) ? UIImage(named: Constants.UIImages.likeImageActive.rawValue) : UIImage(named: Constants.UIImages.likeImageNoActive.rawValue) else {
+        guard let likeImage = (indexPath.row % 2 == 0) ? UIImage(named: C.UIImages.likeImageActive.rawValue) : UIImage(named: C.UIImages.likeImageNoActive.rawValue) else {
             return
         }
         cell.configureElements(image: image, date: date, likeImage: likeImage)

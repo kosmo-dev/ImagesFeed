@@ -17,7 +17,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Private Properties
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: Constants.UIImages.userPicture.rawValue)
+        imageView.image = UIImage(named: C.UIImages.userPicture.rawValue)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
