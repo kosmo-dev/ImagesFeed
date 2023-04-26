@@ -12,7 +12,7 @@ final class Oauth2Service {
         _ code: String,
         completion: @escaping(Result<String, Error>) -> Void
     ){
-        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")!
+        var urlComponents = URLComponents(string: C.UnsplashAPI.tokenURLString)!
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: C.UnsplashAPI.accessKey),
             URLQueryItem(name: "client_secret", value: C.UnsplashAPI.secretKey),

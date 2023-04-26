@@ -40,19 +40,20 @@ extension SplashScreenViewController: AuthViewControllerDelegate {
                 Oauth2TokenStorage().token = token
                 self.switchToTabBarController()
             case .failure(let failure):
-                print("Failed fetch auth token with error: \(failure.localizedDescription)")
+                assertionFailure("Failed fetch auth token with error: \(failure.localizedDescription)")
             }
         }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showAuthFlowSegueID {
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers[0] as? AuthViewController
-            else { fatalError("Failed to prepare for \(showAuthFlowSegueID)") }
-
-            viewController.delegate = self
+            if let navigationController = segue.destination as? UINavigationController,
+               let viewController = navigationController.viewControllers[0] as? AuthViewController
+            {
+                viewController.delegate = self
+            } else {
+                assertionFailure("Failed to prepare for \(showAuthFlowSegueID)")
+            }
         } else {
             super.prepare(for: segue, sender: sender)
         }

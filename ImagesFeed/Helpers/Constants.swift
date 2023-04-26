@@ -25,5 +25,6 @@ enum C {
         static let accesScope = "public+read_user+write_likes"
         static let baseURL = URL(string: "https://api.unsplash.com")!
         static let authURLString = "https://unsplash.com/oauth/authorize"
+        static let tokenURLString = "https://unsplash.com/oauth/token"
     }
 }

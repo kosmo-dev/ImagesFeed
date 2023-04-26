@@ -271,7 +271,7 @@
                                 </connections>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9G8-Tg-Vhw">
-                                <rect key="frame" x="0.0" y="35" width="375" height="4"/>
+                                <rect key="frame" x="33" y="21" width="309" height="4"/>
                                 <color key="tintColor" name="YPBackground"/>
                             </progressView>
                         </subviews>
@@ -279,14 +279,14 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Uof-a8-rZl" firstAttribute="bottom" secondItem="WQX-ub-yrr" secondAttribute="bottom" id="08b-AF-VVF"/>
-                            <constraint firstItem="9G8-Tg-Vhw" firstAttribute="leading" secondItem="WQX-ub-yrr" secondAttribute="leading" id="8VL-Bh-Qbc"/>
+                            <constraint firstItem="9G8-Tg-Vhw" firstAttribute="leading" secondItem="d7K-WU-Omw" secondAttribute="trailing" constant="8" id="8VL-Bh-Qbc"/>
                             <constraint firstItem="Uof-a8-rZl" firstAttribute="trailing" secondItem="WQX-ub-yrr" secondAttribute="trailing" id="ErF-dd-pp4"/>
                             <constraint firstItem="Uof-a8-rZl" firstAttribute="leading" secondItem="WQX-ub-yrr" secondAttribute="leading" id="Nij-KN-Vqy"/>
                             <constraint firstItem="Uof-a8-rZl" firstAttribute="top" secondItem="WQX-ub-yrr" secondAttribute="top" id="YVO-JG-t09"/>
                             <constraint firstItem="d7K-WU-Omw" firstAttribute="leading" secondItem="WQX-ub-yrr" secondAttribute="leading" constant="16" id="giW-r2-pBv"/>
+                            <constraint firstItem="9G8-Tg-Vhw" firstAttribute="centerY" secondItem="d7K-WU-Omw" secondAttribute="centerY" id="kmB-SB-G6h"/>
                             <constraint firstItem="d7K-WU-Omw" firstAttribute="top" secondItem="WQX-ub-yrr" secondAttribute="top" constant="15" id="qlZ-Dn-wEB"/>
-                            <constraint firstItem="WQX-ub-yrr" firstAttribute="trailing" secondItem="9G8-Tg-Vhw" secondAttribute="trailing" id="sqs-Rp-Hh1"/>
-                            <constraint firstItem="9G8-Tg-Vhw" firstAttribute="top" secondItem="d7K-WU-Omw" secondAttribute="bottom" constant="4" id="yZe-Ap-KAe"/>
+                            <constraint firstItem="WQX-ub-yrr" firstAttribute="trailing" secondItem="9G8-Tg-Vhw" secondAttribute="trailing" constant="33" id="sqs-Rp-Hh1"/>
                         </constraints>
                     </view>
                     <connections>
