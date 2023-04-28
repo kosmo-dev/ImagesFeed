@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 final class SplashScreenViewController: UIViewController {
     // MARK: - Private Properties
@@ -32,12 +33,14 @@ final class SplashScreenViewController: UIViewController {
 
 extension SplashScreenViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        ProgressHUD.show()
         Oauth2Service().fetchOAuthToken(code) { [weak self] result in
             guard let self else { return }
 
             switch result {
             case .success(let token):
                 Oauth2TokenStorage().token = token
+                ProgressHUD.dismiss()
                 self.switchToTabBarController()
             case .failure(let failure):
                 assertionFailure("Failed fetch auth token with error: \(failure.localizedDescription)")
