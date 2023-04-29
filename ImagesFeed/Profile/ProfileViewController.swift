@@ -63,7 +63,7 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
-
+        fetchProfile()
         configureConstraints()
     }
 
@@ -90,5 +90,21 @@ final class ProfileViewController: UIViewController {
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -26),
             exitButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
         ])
+    }
+
+    private func fetchProfile() {
+        guard let token = Oauth2TokenStorage().token else { return }
+        print("token", token)
+        ProfileService().fetchProfile(token) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let data):
+                nameLabel.text = data.name
+                loginLabel.text = data.loginName
+                descriptionLabel.text = data.bio
+            case .failure(let error):
+                assertionFailure(error.localizedDescription)
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ final class Oauth2Service {
         task?.cancel()
         lastCode = code
 
-        var urlComponents = URLComponents(string: C.UnsplashAPI.tokenURLString)!
+        var urlComponents = URLComponents(string: C.UnsplashAPI.tokenURL)!
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: C.UnsplashAPI.accessKey),
             URLQueryItem(name: "client_secret", value: C.UnsplashAPI.secretKey),

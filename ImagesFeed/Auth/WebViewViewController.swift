@@ -60,7 +60,7 @@ final class WebViewViewController: UIViewController {
 
     // MARK: - Private Methods
     private func configureAuthURL() -> URL {
-        var urlComponents = URLComponents(string: C.UnsplashAPI.authURLString)!
+        var urlComponents = URLComponents(string: C.UnsplashAPI.authURL)!
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: C.UnsplashAPI.accessKey),
             URLQueryItem(name: "redirect_uri", value: C.UnsplashAPI.redirectURI),
