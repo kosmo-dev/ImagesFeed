@@ -15,6 +15,10 @@ final class ProfileViewController: UIViewController {
     }
 
     // MARK: - Private Properties
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: C.UIImages.userPicture)
@@ -63,11 +67,12 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
-        fetchProfile()
+        subscribeForAvatarUpdates()
+        updateAvatar()
         configureConstraints()
     }
 
-    // MARK: - Methods
+    // MARK: - Private Methods
     @objc private func exitButtonTapped() {
     }
 
@@ -92,19 +97,28 @@ final class ProfileViewController: UIViewController {
         ])
     }
 
-    private func fetchProfile() {
-        guard let token = Oauth2TokenStorage().token else { return }
-        print("token", token)
-        ProfileService().fetchProfile(token) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let data):
-                nameLabel.text = data.name
-                loginLabel.text = data.loginName
-                descriptionLabel.text = data.bio
-            case .failure(let error):
-                assertionFailure(error.localizedDescription)
+    private func subscribeForAvatarUpdates() {
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: profileImageService.didChangeNotification,
+            object: nil,
+            queue: .main,
+            using: { [weak self] _ in
+                guard let self else { return }
+                self.updateAvatar()
             }
+        )
+        if let profile = profileService.profile {
+            updateProfileDetails(profile: profile)
         }
+    }
+
+    private func updateAvatar() {
+        guard let profileImageURL = profileImageService.avatarURL, let url = URL(string: profileImageURL) else { return }
+    }
+
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        loginLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
     }
 }
