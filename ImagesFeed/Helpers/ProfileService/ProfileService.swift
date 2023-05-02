@@ -22,8 +22,6 @@ final class ProfileService {
 
     // MARK: Public Methods
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void ) {
-        guard task == nil else { return }
-        
         var urlComponents = URLComponents(string: C.UnsplashAPI.baseURL)!
         urlComponents.path = "/me"
         let url = urlComponents.url!
@@ -32,27 +30,26 @@ final class ProfileService {
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        let dataTask = urlSession.data(for: request) { result in
+        let dataTask = urlSession.objectTask(for: request) { (result: Result<ProfileResult, Error>) in
             switch result {
             case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    let responseBody = try decoder.decode(ProfileResult.self, from: data)
-                    let profile = self.convertResponse(from: responseBody)
-                    self.profile = profile
-                    completion(.success(profile))
-                    self.task = nil
-                } catch {
-                    completion(.failure(error))
-                    self.task = nil
-                }
+                let profile = self.convertResponse(from: data)
+                self.profile = profile
+                completion(.success(profile))
+                self.task = nil
             case .failure(let error):
                 completion(.failure(error))
                 self.task = nil
             }
         }
         self.task = dataTask
-        task?.resume()
+
+        if let profile {
+            self.task = nil
+            completion(.success(profile))
+        } else {
+            task?.resume()
+        }
     }
 
     // MARK: - Private Methods

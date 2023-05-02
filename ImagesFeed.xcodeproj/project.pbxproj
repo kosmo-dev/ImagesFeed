@@ -112,6 +112,15 @@
 			path = ImagesFeed;
 			sourceTree = "<group>";
 		};
+		3D5E785C2A0014520084534A /* ProfileImageService */ = {
+			isa = PBXGroup;
+			children = (
+				3DB2BD6C29FE680100D7FF24 /* ProfileImageService.swift */,
+				3DB2BD6E29FE684400D7FF24 /* UserResult.swift */,
+			);
+			path = ProfileImageService;
+			sourceTree = "<group>";
+		};
 		3D5ED18E29D6C9BB00266E23 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,6 +154,8 @@
 				3D6C1CDC29CCB73B00A7C327 /* Constants.swift */,
 				3DC9DDA829F42E2800534D23 /* URLSession+Extension.swift */,
 				3D6F87F229FC3805009929C9 /* UIBlockingProgressHUD.swift */,
+				3DF5196329FD2EF000A95E9A /* ProfileService */,
+				3D5E785C2A0014520084534A /* ProfileImageService */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -173,7 +184,6 @@
 				3D21558329E9CF87008EDED4 /* AuthViewController.swift */,
 				3DC9DDA229F316D100534D23 /* WebViewViewController.swift */,
 				3DB599EF29F72E9E008E2174 /* OauthService */,
-				3DF5196329FD2EF000A95E9A /* ProfileService */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -184,8 +194,6 @@
 				3D6F87F429FC619C009929C9 /* ProfileService.swift */,
 				3DF5196429FD2F1500A95E9A /* ProfileResult.swift */,
 				3DF5196629FD2F1B00A95E9A /* Profile.swift */,
-				3DB2BD6C29FE680100D7FF24 /* ProfileImageService.swift */,
-				3DB2BD6E29FE684400D7FF24 /* UserResult.swift */,
 			);
 			path = ProfileService;
 			sourceTree = "<group>";

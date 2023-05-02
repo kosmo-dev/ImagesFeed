@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum ProfileImageServiceError: Error {
+    case noAccessToken
+}
+
 final class ProfileImageService {
     static let shared = ProfileImageService()
     let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
@@ -17,8 +21,10 @@ final class ProfileImageService {
     private init() {}
 
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
-        guard task == nil else { return }
-        guard let token = Oauth2TokenStorage().token else { return }
+        guard let token = Oauth2TokenStorage().token else {
+            completion(.failure(ProfileImageServiceError.noAccessToken))
+            return
+        }
 
         var urlComponents = URLComponents(string: C.UnsplashAPI.baseURL)!
         urlComponents.path = "/users/\(username)"
@@ -28,25 +34,17 @@ final class ProfileImageService {
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        let dataTask = URLSession.shared.data(for: request) { [weak self] result in
-            guard let self else { return }
+        let dataTask = URLSession.shared.objectTask(for: request) { (result: Result<UserResult, Error>) in
             switch result {
             case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    let responseBody = try decoder.decode(UserResult.self, from: data)
-                    self.avatarURL = responseBody.profileImage.small
-                    completion(.success(responseBody.profileImage.small))
-                    NotificationCenter.default.post(
-                        name: self.didChangeNotification,
-                        object: self,
-                        userInfo: ["URL": responseBody.profileImage.small]
-                    )
-                    self.task = nil
-                } catch {
-                    completion(.failure(error))
-                    self.task = nil
-                }
+                self.avatarURL = data.profileImage.small
+                completion(.success(data.profileImage.small))
+                NotificationCenter.default.post(
+                    name: self.didChangeNotification,
+                    object: self,
+                    userInfo: ["URL": data.profileImage.small]
+                )
+                self.task = nil
             case .failure(let error):
                 completion(.failure(error))
                 self.task = nil

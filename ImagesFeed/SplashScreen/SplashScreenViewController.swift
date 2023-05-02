@@ -39,11 +39,18 @@ final class SplashScreenViewController: UIViewController {
                 profileImageService.fetchProfileImageURL(username: result.username) { _ in }
                 UIBlockingProgressHUD.dismiss()
                 self.switchToTabBarController()
-            case .failure(let error):
+            case .failure(_):
                 UIBlockingProgressHUD.dismiss()
-                assertionFailure(error.localizedDescription)
+                showAlertViewController()
             }
         }
+    }
+
+    private func showAlertViewController() {
+        let alertVC = UIAlertController(title: "Что-то пошло не так", message: "Не удалось войти в систему", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ок", style: .default)
+        alertVC.addAction(action)
+        present(alertVC, animated: true)
     }
 }
 
@@ -56,9 +63,9 @@ extension SplashScreenViewController: AuthViewControllerDelegate {
             case .success(let token):
                 Oauth2TokenStorage().token = token
                 fetchProfile(token: token)
-            case .failure(let failure):
-                assertionFailure("Failed fetch auth token with error: \(failure.localizedDescription)")
+            case .failure(_):
                 UIBlockingProgressHUD.dismiss()
+                showAlertViewController()
             }
         }
     }

@@ -33,27 +33,19 @@ final class Oauth2Service {
         var request = URLRequest(url: urlComponents.url!)
         request.httpMethod = "POST"
 
-        let task = urlSession.data(for: request) { result in
+        let dataTask = urlSession.objectTask(for: request) { (result: Result<OauthTokenResponseBody, Error>) in
             switch result {
             case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    let responseBody = try decoder.decode(OauthTokenResponseBody.self, from: data)
-                    let authToken = responseBody.accessToken
-                    completion(.success(authToken))
-                    self.task = nil
-                } catch {
-                    completion(.failure(error))
-                    self.task = nil
-                    self.lastCode = nil
-                }
+                let authToken = data.accessToken
+                completion(.success(authToken))
+                self.task = nil
             case .failure(let error):
                 completion(.failure(error))
                 self.task = nil
                 self.lastCode = nil
             }
         }
-        self.task = task
-        task.resume()
+        task = dataTask
+        task?.resume()
     }
 }
