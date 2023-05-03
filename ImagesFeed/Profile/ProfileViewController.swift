@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
 
@@ -21,7 +22,7 @@ final class ProfileViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: C.UIImages.userPicture)
+        imageView.tintColor = .YPGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -114,6 +115,16 @@ final class ProfileViewController: UIViewController {
 
     private func updateAvatar() {
         guard let profileImageURL = profileImageService.avatarURL, let url = URL(string: profileImageURL) else { return }
+        let placeholderImage = UIImage(systemName: C.UIImages.personPlaceholder)
+        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+
+        imageView.kf.setImage(with: url, placeholder: placeholderImage, options: [.processor(processor)])
+    }
+
+    private func clearImageCache() {
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
     }
 
     private func updateProfileDetails(profile: Profile) {

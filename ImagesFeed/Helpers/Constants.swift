@@ -17,6 +17,7 @@ enum C {
         static let tabBarMain = "TabBarMain"
         static let backward = "Backward"
         static let unsplashLogoWhite = "UnsplashLogoWhite"
+        static let personPlaceholder = "person.circle.fill"
     }
     struct UnsplashAPI {
         static let accessKey = "Dv0ldX5teKBEmM_b8wyGkiGIC9zWb5yt5LBcK6qVn-8"
