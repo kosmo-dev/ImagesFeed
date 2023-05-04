@@ -18,7 +18,7 @@ final class SplashScreenViewController: UIViewController {
     // MARK: - View Life Cycle
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let token = Oauth2TokenStorage().token {
+        if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
             fetchProfile(token: token)
         } else {
             performSegue(withIdentifier: showAuthFlowSegueID, sender: nil)
@@ -61,8 +61,15 @@ extension SplashScreenViewController: AuthViewControllerDelegate {
             guard let self else { return }
             switch result {
             case .success(let token):
-                Oauth2TokenStorage().token = token
+
+                let isSuccess = KeychainManager.shared.set(token, forKey: C.Keychain.accessToken)
+                guard isSuccess else {
+                    UIBlockingProgressHUD.dismiss()
+                    showAlertViewController()
+                    return
+                }
                 fetchProfile(token: token)
+
             case .failure(_):
                 UIBlockingProgressHUD.dismiss()
                 showAlertViewController()

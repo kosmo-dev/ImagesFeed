@@ -21,7 +21,7 @@ final class ProfileImageService {
     private init() {}
 
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
-        guard let token = Oauth2TokenStorage().token else {
+        guard let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) else {
             completion(.failure(ProfileImageServiceError.noAccessToken))
             return
         }

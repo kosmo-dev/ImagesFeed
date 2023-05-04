@@ -116,7 +116,7 @@ final class ProfileViewController: UIViewController {
     private func updateAvatar() {
         guard let profileImageURL = profileImageService.avatarURL, let url = URL(string: profileImageURL) else { return }
         let placeholderImage = UIImage(systemName: C.UIImages.personPlaceholder)
-        let processor = RoundCornerImageProcessor(cornerRadius: 61)
+        let processor = RoundCornerImageProcessor(radius: .point(61), roundingCorners: .all, backgroundColor: .clear)
 
         imageView.kf.setImage(with: url, placeholder: placeholderImage, options: [.processor(processor)])
     }

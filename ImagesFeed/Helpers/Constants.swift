@@ -28,4 +28,7 @@ enum C {
         static let authURL = "https://unsplash.com/oauth/authorize"
         static let tokenURL = "https://unsplash.com/oauth/token"
     }
+    struct Keychain {
+        static let accessToken = "accessToken"
+    }
 }
