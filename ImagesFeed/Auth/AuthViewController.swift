@@ -19,7 +19,7 @@ final class AuthViewController: UIViewController {
     private let showWebViewSegueIdentifier = "ShowWebView"
 
     // MARK: - Outlets
-    @IBOutlet private weak var enterButton: UIButton!
+    @IBOutlet private weak var enterButton: UIButton?
 
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -32,9 +32,9 @@ final class AuthViewController: UIViewController {
 
     // MARK: - Private Methods
     private func configureButton() {
-        enterButton.layer.cornerRadius = 16
-        enterButton.layer.masksToBounds = true
-        enterButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+        enterButton?.layer.cornerRadius = 16
+        enterButton?.layer.masksToBounds = true
+        enterButton?.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
     }
 
     // MARK: - Navigation

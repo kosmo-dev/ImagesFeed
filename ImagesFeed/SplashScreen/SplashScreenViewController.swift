@@ -15,18 +15,31 @@ final class SplashScreenViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
 
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: C.UIImages.unsplashLogoWhite)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
     // MARK: - View Life Cycle
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        configureLayout()
+
         if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
             fetchProfile(token: token)
         } else {
-            performSegue(withIdentifier: showAuthFlowSegueID, sender: nil)
+            presentAuthViewController()
         }
     }
     // MARK: - Private Methods
     func switchToTabBarController() {
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid config")}
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Invalid config")
+            showAlertViewController()
+            return
+        }
         let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
         window.rootViewController = tabBarController
     }
@@ -52,6 +65,23 @@ final class SplashScreenViewController: UIViewController {
         alertVC.addAction(action)
         present(alertVC, animated: true)
     }
+
+    private func configureLayout() {
+        view.backgroundColor = .YPBlack
+        view.addSubview(imageView)
+        NSLayoutConstraint.activate([
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+
+    private func presentAuthViewController() {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        guard let authViewcontroller = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else { return }
+        authViewcontroller.delegate = self
+        authViewcontroller.modalPresentationStyle = .fullScreen
+        present(authViewcontroller, animated: true)
+    }
 }
 
 extension SplashScreenViewController: AuthViewControllerDelegate {
@@ -74,20 +104,6 @@ extension SplashScreenViewController: AuthViewControllerDelegate {
                 UIBlockingProgressHUD.dismiss()
                 showAlertViewController()
             }
-        }
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthFlowSegueID {
-            if let navigationController = segue.destination as? UINavigationController,
-               let viewController = navigationController.viewControllers[0] as? AuthViewController
-            {
-                viewController.delegate = self
-            } else {
-                assertionFailure("Failed to prepare for \(showAuthFlowSegueID)")
-            }
-        } else {
-            super.prepare(for: segue, sender: sender)
         }
     }
 }
