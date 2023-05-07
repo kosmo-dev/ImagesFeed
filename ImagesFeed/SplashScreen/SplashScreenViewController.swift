@@ -26,7 +26,7 @@ final class SplashScreenViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         configureLayout()
-
+        
         if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
             fetchProfile(token: token)
         } else {
@@ -48,8 +48,8 @@ final class SplashScreenViewController: UIViewController {
         profileService.fetchProfile(token) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let result):
-                profileImageService.fetchProfileImageURL(username: result.username) { _ in }
+            case .success(let profile):
+                profileImageService.fetchProfileImageURL(username: profile.username) { _ in }
                 UIBlockingProgressHUD.dismiss()
                 self.switchToTabBarController()
             case .failure(_):
