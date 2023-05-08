@@ -26,12 +26,13 @@ final class SplashScreenViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         configureLayout()
+        switchToTabBarController()
         
-        if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
-            fetchProfile(token: token)
-        } else {
-            presentAuthViewController()
-        }
+//        if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
+//            fetchProfile(token: token)
+//        } else {
+//            presentAuthViewController()
+//        }
     }
     // MARK: - Private Methods
     func switchToTabBarController() {
@@ -40,7 +41,8 @@ final class SplashScreenViewController: UIViewController {
             showAlertViewController()
             return
         }
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
+//        let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
+        let tabBarController = TabBarController()
         window.rootViewController = tabBarController
     }
 

@@ -16,6 +16,7 @@ enum C {
         static let tabBarProfile = "TabBarProfile"
         static let tabBarMain = "TabBarMain"
         static let backward = "Backward"
+        static let sharing = "Sharing"
         static let unsplashLogoWhite = "UnsplashLogoWhite"
         static let personPlaceholder = "person.circle.fill"
     }

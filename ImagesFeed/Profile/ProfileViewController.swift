@@ -68,6 +68,7 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
+        view.backgroundColor = .YPBlack
         subscribeForAvatarUpdates()
         updateAvatar()
         configureConstraints()
