@@ -26,13 +26,12 @@ final class SplashScreenViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         configureLayout()
-        switchToTabBarController()
         
-//        if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
-//            fetchProfile(token: token)
-//        } else {
-//            presentAuthViewController()
-//        }
+        if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
+            fetchProfile(token: token)
+        } else {
+            presentAuthViewController()
+        }
     }
     // MARK: - Private Methods
     func switchToTabBarController() {
@@ -41,7 +40,6 @@ final class SplashScreenViewController: UIViewController {
             showAlertViewController()
             return
         }
-//        let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
         let tabBarController = TabBarController()
         window.rootViewController = tabBarController
     }
@@ -62,7 +60,7 @@ final class SplashScreenViewController: UIViewController {
     }
 
     private func showAlertViewController() {
-        let alertVC = UIAlertController(title: "Что-то пошло не так", message: "Не удалось войти в систему", preferredStyle: .alert)
+        let alertVC = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
         let action = UIAlertAction(title: "Ок", style: .default)
         alertVC.addAction(action)
         present(alertVC, animated: true)
@@ -78,11 +76,10 @@ final class SplashScreenViewController: UIViewController {
     }
 
     private func presentAuthViewController() {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        guard let authViewcontroller = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else { return }
-        authViewcontroller.delegate = self
-        authViewcontroller.modalPresentationStyle = .fullScreen
-        present(authViewcontroller, animated: true)
+        let authViewController = AuthViewController()
+        authViewController.delegate = self
+        authViewController.modalPresentationStyle = .fullScreen
+        present(authViewController, animated: true)
     }
 }
 

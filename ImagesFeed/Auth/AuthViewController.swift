@@ -18,33 +18,58 @@ final class AuthViewController: UIViewController {
     // MARK: - Private Properties
     private let showWebViewSegueIdentifier = "ShowWebView"
 
-    // MARK: - Outlets
-    @IBOutlet private weak var enterButton: UIButton?
+    private let enterButton: UIButton = {
+        let enterButton = UIButton()
+        enterButton.setTitle("Войти", for: .normal)
+        enterButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+        enterButton.setTitleColor(.YPBlack, for: .normal)
+        enterButton.backgroundColor = .white
+        enterButton.addTarget(nil, action: #selector(enterButtonTapped), for: .touchUpInside)
+        enterButton.layer.cornerRadius = 16
+        enterButton.layer.masksToBounds = true
+        enterButton.translatesAutoresizingMaskIntoConstraints = false
+        return enterButton
+    }()
+
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: C.UIImages.unsplashLogoWhite)
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
 
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureButton()
+        configureView()
     }
-
-    // MARK: - Actions
-    @IBAction private func enterButtonTapped() {}
-
+    
     // MARK: - Private Methods
-    private func configureButton() {
-        enterButton?.layer.cornerRadius = 16
-        enterButton?.layer.masksToBounds = true
-        enterButton?.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+    @objc private func enterButtonTapped() {
+        let viewController = WebViewViewController()
+        viewController.delegate = self
+        viewController.modalPresentationStyle = .fullScreen
+        present(viewController, animated: true)
     }
 
-    // MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showWebViewSegueIdentifier,
-           let vc = segue.destination as? WebViewViewController {
-            vc.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    private func configureView() {
+        view.backgroundColor = .YPBlack
+
+        view.addSubview(imageView)
+        view.addSubview(enterButton)
+
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: 60),
+            imageView.heightAnchor.constraint(equalToConstant: 60),
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
+            enterButton.heightAnchor.constraint(equalToConstant: 48),
+            enterButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            enterButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            enterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90)
+        ])
     }
 }
 

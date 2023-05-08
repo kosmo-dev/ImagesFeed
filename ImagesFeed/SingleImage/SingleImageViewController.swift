@@ -39,7 +39,7 @@ final class SingleImageViewController: UIViewController {
     private let backButton: UIButton = {
         let backButton = UIButton()
         backButton.setImage(UIImage(named: C.UIImages.backward), for: .normal)
-        backButton.addTarget(nil, action: #selector(didTabBackButton), for: .touchUpInside)
+        backButton.addTarget(nil, action: #selector(didTapBackButton), for: .touchUpInside)
         backButton.setTitle("", for: .normal)
         backButton.imageView?.contentMode = .scaleAspectFill
         backButton.translatesAutoresizingMaskIntoConstraints = false
@@ -68,7 +68,7 @@ final class SingleImageViewController: UIViewController {
     }
 
     // MARK: - Private Method
-    @objc private func didTabBackButton() {
+    @objc private func didTapBackButton() {
         dismiss(animated: true)
     }
     @objc private func didTapSharingButton() {
@@ -96,7 +96,7 @@ final class SingleImageViewController: UIViewController {
 
     private func configureLayout() {
         view.backgroundColor = .YPBlack
-        
+
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
         view.addSubview(backButton)
