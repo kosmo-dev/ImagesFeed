@@ -80,6 +80,8 @@ final class WebViewViewController: UIViewController {
     }
 
     private func configureLayout() {
+        view.backgroundColor = .white
+        
         view.addSubview(webView)
         view.addSubview(backButton)
         view.addSubview(progressView)

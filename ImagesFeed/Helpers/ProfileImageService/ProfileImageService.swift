@@ -17,10 +17,22 @@ final class ProfileImageService {
     
     private (set) var avatarURL: String?
     private var task: URLSessionTask?
+    private var fetchedUsernames = [String: String]()
 
     private init() {}
 
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
+
+        if let profileImageUrl = fetchedUsernames[username] {
+            completion(.success(profileImageUrl))
+            NotificationCenter.default.post(
+                name: didChangeNotification,
+                object: self,
+                userInfo: ["URL": profileImageUrl]
+            )
+            return
+        }
+
         guard let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) else {
             completion(.failure(ProfileImageServiceError.noAccessToken))
             return
@@ -44,6 +56,7 @@ final class ProfileImageService {
                     object: self,
                     userInfo: ["URL": data.profileImage.small]
                 )
+                self.fetchedUsernames[username] = data.profileImage.small
                 self.task = nil
             case .failure(let error):
                 completion(.failure(error))
