@@ -9,12 +9,6 @@ import UIKit
 import Kingfisher
 
 final class ProfileViewController: UIViewController {
-
-//    // MARK: - Public Properties
-//    override var preferredStatusBarStyle: UIStatusBarStyle {
-//        return .lightContent
-//    }
-
     // MARK: - Private Properties
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared

@@ -19,7 +19,7 @@ final class Oauth2Service {
         if lastCode == code {
             return
         }
-        task?.cancel()
+        guard task == nil else { return }
         lastCode = code
 
         var urlComponents = URLComponents(string: C.UnsplashAPI.tokenURL)!
@@ -33,7 +33,8 @@ final class Oauth2Service {
         var request = URLRequest(url: urlComponents.url!)
         request.httpMethod = "POST"
 
-        let dataTask = urlSession.objectTask(for: request) { (result: Result<OauthTokenResponseBody, Error>) in
+        let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<OauthTokenResponseBody, Error>) in
+            guard let self else { print("self is not exist"); return }
             switch result {
             case .success(let data):
                 let authToken = data.accessToken

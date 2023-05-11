@@ -22,6 +22,7 @@ final class ProfileImageService {
     private init() {}
 
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
+        guard task == nil else { return }
 
         if let profileImageUrl = fetchedUsernames[username] {
             completion(.success(profileImageUrl))
@@ -46,7 +47,8 @@ final class ProfileImageService {
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        let dataTask = URLSession.shared.objectTask(for: request) { (result: Result<UserResult, Error>) in
+        let dataTask = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            guard let self else { print("self does not exist profileimageservice"); return}
             switch result {
             case .success(let data):
                 self.avatarURL = data.profileImage.small

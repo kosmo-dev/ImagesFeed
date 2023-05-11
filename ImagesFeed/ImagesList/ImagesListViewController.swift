@@ -54,20 +54,6 @@ final class ImagesListViewController: UIViewController {
         viewController.modalPresentationStyle = .fullScreen
         present(viewController, animated: true)
     }
-
-    // MARK: - Navigation
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == showSingleImageSegueIdentifier {
-//            guard let viewController = segue.destination as? SingleImageViewController,
-//                  let indexPath = sender as? IndexPath else {
-//                return
-//            }
-//            let image = UIImage(named: photosName[indexPath.row])
-//            viewController.image = image
-//        } else {
-//            super.prepare(for: segue, sender: sender)
-//        }
-//    }
 }
 
 // MARK: - UITableViewDataSource
@@ -118,7 +104,6 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
         presentSingleImageView(for: indexPath)
     }
 }

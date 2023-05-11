@@ -30,7 +30,8 @@ final class ProfileService {
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        let dataTask = urlSession.objectTask(for: request) { (result: Result<ProfileResult, Error>) in
+        let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            guard let self else { print("self does not exist profileService"); return }
             switch result {
             case .success(let data):
                 let profile = self.convertResponse(from: data)

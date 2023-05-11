@@ -49,9 +49,10 @@ final class SplashScreenViewController: UIViewController {
             guard let self else { return }
             switch result {
             case .success(let profile):
-                profileImageService.fetchProfileImageURL(username: profile.username) { _ in }
+                profileImageService.fetchProfileImageURL(username: profile.username) { _ in
+                    self.switchToTabBarController()
+                }
                 UIBlockingProgressHUD.dismiss()
-                self.switchToTabBarController()
             case .failure(_):
                 UIBlockingProgressHUD.dismiss()
                 showAlertViewController()
@@ -61,7 +62,7 @@ final class SplashScreenViewController: UIViewController {
 
     private func showAlertViewController() {
         let alertVC = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
-        let action = UIAlertAction(title: "Ок", style: .default)
+        let action = UIAlertAction(title: "Ok", style: .default)
         alertVC.addAction(action)
         present(alertVC, animated: true)
     }
