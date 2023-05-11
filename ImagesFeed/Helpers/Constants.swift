@@ -16,15 +16,21 @@ enum C {
         static let tabBarProfile = "TabBarProfile"
         static let tabBarMain = "TabBarMain"
         static let backward = "Backward"
+        static let navigationBackButton = "NavBackButton"
+        static let sharing = "Sharing"
         static let unsplashLogoWhite = "UnsplashLogoWhite"
+        static let personPlaceholder = "person.circle.fill"
     }
     struct UnsplashAPI {
         static let accessKey = "Dv0ldX5teKBEmM_b8wyGkiGIC9zWb5yt5LBcK6qVn-8"
         static let secretKey = "3fRT7bJORB1bBKJjM3jyfGINI3RsdSN_SEcB39XSm48"
         static let redirectURI = "urn:ietf:wg:oauth:2.0:oob"
         static let accesScope = "public+read_user+write_likes"
-        static let baseURL = URL(string: "https://api.unsplash.com")!
-        static let authURLString = "https://unsplash.com/oauth/authorize"
-        static let tokenURLString = "https://unsplash.com/oauth/token"
+        static let baseURL = "https://api.unsplash.com"
+        static let authURL = "https://unsplash.com/oauth/authorize"
+        static let tokenURL = "https://unsplash.com/oauth/token"
+    }
+    struct Keychain {
+        static let accessToken = "accessToken"
     }
 }

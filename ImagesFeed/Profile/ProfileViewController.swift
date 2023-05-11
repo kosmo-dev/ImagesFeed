@@ -6,18 +6,17 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
-
-    // MARK: - Public Properties
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-
     // MARK: - Private Properties
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: C.UIImages.userPicture)
+        imageView.tintColor = .YPGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -63,11 +62,13 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
-
+        view.backgroundColor = .YPBlack
+        subscribeForAvatarUpdates()
+        updateAvatar()
         configureConstraints()
     }
 
-    // MARK: - Methods
+    // MARK: - Private Methods
     @objc private func exitButtonTapped() {
     }
 
@@ -90,5 +91,40 @@ final class ProfileViewController: UIViewController {
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -26),
             exitButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
         ])
+    }
+
+    private func subscribeForAvatarUpdates() {
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: profileImageService.didChangeNotification,
+            object: nil,
+            queue: .main,
+            using: { [weak self] _ in
+                guard let self else { return }
+                self.updateAvatar()
+            }
+        )
+        if let profile = profileService.profile {
+            updateProfileDetails(profile: profile)
+        }
+    }
+
+    private func updateAvatar() {
+        guard let profileImageURL = profileImageService.avatarURL, let url = URL(string: profileImageURL) else { return }
+        let placeholderImage = UIImage(systemName: C.UIImages.personPlaceholder)
+        let processor = RoundCornerImageProcessor(radius: .point(61), roundingCorners: .all, backgroundColor: .clear)
+
+        imageView.kf.setImage(with: url, placeholder: placeholderImage, options: [.processor(processor)])
+    }
+
+    private func clearImageCache() {
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+    }
+
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        loginLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
     }
 }

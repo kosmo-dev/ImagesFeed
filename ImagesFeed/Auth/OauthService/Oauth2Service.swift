@@ -8,11 +8,21 @@
 import Foundation
 
 final class Oauth2Service {
-    func fetchOAuthToken(
-        _ code: String,
-        completion: @escaping(Result<String, Error>) -> Void
-    ){
-        var urlComponents = URLComponents(string: C.UnsplashAPI.tokenURLString)!
+    private let urlSession = URLSession.shared
+
+    private var task: URLSessionTask?
+    private var lastCode: String?
+
+    func fetchOAuthToken(_ code: String, completion: @escaping(Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+
+        if lastCode == code {
+            return
+        }
+        guard task == nil else { return }
+        lastCode = code
+
+        var urlComponents = URLComponents(string: C.UnsplashAPI.tokenURL)!
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: C.UnsplashAPI.accessKey),
             URLQueryItem(name: "client_secret", value: C.UnsplashAPI.secretKey),
@@ -23,21 +33,20 @@ final class Oauth2Service {
         var request = URLRequest(url: urlComponents.url!)
         request.httpMethod = "POST"
 
-        let task = URLSession.shared.data(for: request) { result in
+        let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<OauthTokenResponseBody, Error>) in
+            guard let self else { print("self is not exist"); return }
             switch result {
             case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    let responseBody = try decoder.decode(OauthTokenResponseBody.self, from: data)
-                    let authToken = responseBody.accessToken
-                    completion(.success(authToken))
-                } catch {
-                    completion(.failure(error))
-                }
+                let authToken = data.accessToken
+                completion(.success(authToken))
+                self.task = nil
             case .failure(let error):
                 completion(.failure(error))
+                self.task = nil
+                self.lastCode = nil
             }
         }
-        task.resume()
+        task = dataTask
+        task?.resume()
     }
 }
