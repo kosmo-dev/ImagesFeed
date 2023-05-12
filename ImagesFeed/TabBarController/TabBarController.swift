@@ -14,6 +14,15 @@ final class TabBarController: UITabBarController {
         tabBar.barTintColor = .YPBlack
         tabBar.tintColor = .white
 
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .YPBlack
+            tabBar.standardAppearance = appearance
+            tabBar.scrollEdgeAppearance = appearance
+        }
+
+
         let imagesListViewController = ImagesListViewController()
         imagesListViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: C.UIImages.tabBarMain), selectedImage: nil)
 

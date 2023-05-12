@@ -14,6 +14,7 @@ final class SplashScreenViewController: UIViewController {
     private let showAuthFlowSegueID = "showAuthFlow"
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private let oAuth2Service = Oauth2Service()
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -87,7 +88,7 @@ final class SplashScreenViewController: UIViewController {
 extension SplashScreenViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         UIBlockingProgressHUD.show()
-        Oauth2Service().fetchOAuthToken(code) { [weak self] result in
+        oAuth2Service.fetchOAuthToken(code) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let token):
