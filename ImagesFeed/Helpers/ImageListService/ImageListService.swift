@@ -29,7 +29,9 @@ final class ImageListService {
 
         guard let url = urlComponents?.url else { return }
         
-        let request = URLRequest(url: url)
+        var request = URLRequest(url: url)
+        guard let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) else { return }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self else { return }
@@ -41,6 +43,7 @@ final class ImageListService {
                         self.photos.append(photo)
                     }
                     NotificationCenter.default.post(name: ImageListService.didChangeNotification, object: nil)
+                    self.lastLoadedPage = nextPage
                     self.task = nil
                 }
             case .failure(let error):

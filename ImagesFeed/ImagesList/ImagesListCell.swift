@@ -6,14 +6,16 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
     // MARK: - Public Properties
     static let reuseIdentifier = "ImagesListCell"
 
     // MARK: - Private Properties
-    private let cellImageView: UIImageView = {
+    let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
+        cellImageView.contentMode = .scaleAspectFit
         cellImageView.layer.cornerRadius = 16
         cellImageView.layer.masksToBounds = true
         cellImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -76,6 +78,11 @@ final class ImagesListCell: UITableViewCell {
         cellImageView.image = image
         dateLabel.text = date
         likeButton.setImage(likeImage, for: .normal)
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImageView.kf.cancelDownloadTask()
     }
 
     // MARK: - Private Methods
