@@ -106,6 +106,11 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presentSingleImageView(for: indexPath)
     }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        guard indexPath.row + 1 == photos.count else { return }
+
+    }
 }
 
 // MARK: - DateFormatter
