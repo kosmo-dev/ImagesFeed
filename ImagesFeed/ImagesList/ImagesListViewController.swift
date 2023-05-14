@@ -91,6 +91,7 @@ extension ImagesListViewController: UITableViewDataSource {
         imageListCell.backgroundColor = .YPBlack
         imageListCell.selectionStyle = .none
 
+        imageListCell.delegate = self
         configureCell(for: imageListCell, with: indexPath)
         return imageListCell
     }
@@ -107,16 +108,14 @@ extension ImagesListViewController: UITableViewDataSource {
 
     private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let date = dateFormatter.string(from: Date())
-        guard let likeImage = (indexPath.row % 2 == 0) ? UIImage(named: C.UIImages.likeImageActive) : UIImage(named: C.UIImages.likeImageNoActive) else {
-            return
-        }
+        
         guard let url = URL(string: photos[indexPath.row].thumbImageURL) else { return }
         cell.cellImageView.kf.indicatorType = .activity
         cell.cellImageView.kf.setImage(with: url, placeholder: UIImage(named: C.UIImages.imagePlaceholder)) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let image):
-                cell.configureElements(image: image.image, date: date, likeImage: likeImage)
+                cell.configureElements(image: image.image, date: date, isLiked: photos[indexPath.row].isLiked)
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
             case .failure(let error):
                 assertionFailure(error.localizedDescription)
@@ -148,6 +147,25 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard indexPath.row + 1 == imageListService.photos.count else { return }
         imageListService.fetchPhotosNextPage()
+    }
+}
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imagesListCellLikeButtonTapped(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self.photos = self.imageListService.photos
+                    self.tableView.reloadRows(at: [indexPath], with: .none)
+                }
+            case .failure(_):
+                assertionFailure()
+            }
+        }
     }
 }
 

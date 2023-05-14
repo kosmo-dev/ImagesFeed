@@ -18,6 +18,7 @@
 		3D4FC69229C74B15008E3812 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D4FC69029C74B15008E3812 /* LaunchScreen.storyboard */; };
 		3D4FC69A29C755DF008E3812 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FC69929C755DF008E3812 /* UIColor+Extensions.swift */; };
 		3D59239A29D8C5650041D384 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D59239929D8C5650041D384 /* SingleImageViewController.swift */; };
+		3D5A36F82A104ECC00606578 /* LikePhotoResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5A36F72A104ECC00606578 /* LikePhotoResult.swift */; };
 		3D5ED19029D6CA0A00266E23 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5ED18F29D6CA0A00266E23 /* ProfileViewController.swift */; };
 		3D6C1CDD29CCB73B00A7C327 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6C1CDC29CCB73B00A7C327 /* Constants.swift */; };
 		3D6F87F329FC3805009929C9 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F87F229FC3805009929C9 /* UIBlockingProgressHUD.swift */; };
@@ -53,6 +54,7 @@
 		3D4FC69329C74B15008E3812 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D4FC69929C755DF008E3812 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		3D59239929D8C5650041D384 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
+		3D5A36F72A104ECC00606578 /* LikePhotoResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikePhotoResult.swift; sourceTree = "<group>"; };
 		3D5ED18F29D6CA0A00266E23 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		3D6C1CDC29CCB73B00A7C327 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3D6F87F229FC3805009929C9 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				3DAE7D352A0ED614007AFEDF /* ImageListService.swift */,
 				3DAE7D372A0ED6DC007AFEDF /* Photo.swift */,
 				3DAE7D392A0ED852007AFEDF /* PhotoResult.swift */,
+				3D5A36F72A104ECC00606578 /* LikePhotoResult.swift */,
 			);
 			path = ImageListService;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 				3D4FC69A29C755DF008E3812 /* UIColor+Extensions.swift in Sources */,
 				3DB2BD6D29FE680100D7FF24 /* ProfileImageService.swift in Sources */,
 				3D4BDBA92A03ADBB00B87AAD /* KeychainManager.swift in Sources */,
+				3D5A36F82A104ECC00606578 /* LikePhotoResult.swift in Sources */,
 				3D59239A29D8C5650041D384 /* SingleImageViewController.swift in Sources */,
 				3DC9DDA529F4285D00534D23 /* OauthTokenResponseBody.swift in Sources */,
 				3D6C1CDD29CCB73B00A7C327 /* Constants.swift in Sources */,

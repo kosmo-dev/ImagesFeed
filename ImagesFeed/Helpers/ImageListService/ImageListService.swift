@@ -56,6 +56,44 @@ final class ImageListService {
         task?.resume()
     }
 
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        var urlComponents = URLComponents(string: C.UnsplashAPI.baseURL)
+        urlComponents?.path = "/photos/\(photoId)/like"
+
+        guard let url = urlComponents?.url else { return }
+
+        var request = URLRequest(url: url)
+        guard let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) else { return }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = isLike ? "POST" : "DELETE"
+
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<LikePhotoResult, Error>) in
+            guard let self else { return }
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                        let photo = self.photos[index]
+                        let newPhoto = Photo(
+                            id: photo.id,
+                            size: photo.size,
+                            createdAt: photo.createdAt,
+                            welcomeDescription: photo.welcomeDescription,
+                            thumbImageURL: photo.thumbImageURL,
+                            largeImageURL: photo.largeImageURL,
+                            isLiked: isLike
+                        )
+                        self.photos[index] = newPhoto
+                        completion(.success(()))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+    }
+
     private func convertToPhotoFrom(_ photoResult: PhotoResult) -> Photo {
         let photo = Photo(
             id: photoResult.id,
