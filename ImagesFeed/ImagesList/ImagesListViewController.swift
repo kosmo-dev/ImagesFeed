@@ -58,21 +58,10 @@ final class ImagesListViewController: UIViewController {
     }
 
     private func presentSingleImageView(for indexPath: IndexPath) {
-        UIBlockingProgressHUD.show()
-        let viewController = SingleImageViewController()
         guard let url = URL(string: photos[indexPath.row].largeImageURL) else { return }
-        KingfisherManager.shared.retrieveImage(with: url) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let retrieveResult):
-                viewController.image = retrieveResult.image
-                viewController.modalPresentationStyle = .fullScreen
-                UIBlockingProgressHUD.dismiss()
-                self.present(viewController, animated: true)
-            case .failure(_):
-                UIBlockingProgressHUD.dismiss()
-            }
-        }
+        let viewController = SingleImageViewController(url: url)
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: true)
     }
 }
 
@@ -154,6 +143,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
     func imagesListCellLikeButtonTapped(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photo = photos[indexPath.row]
+        UIBlockingProgressHUD.show()
         imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
             guard let self else { return }
             switch result {
@@ -161,8 +151,10 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 DispatchQueue.main.async {
                     self.photos = self.imageListService.photos
                     self.tableView.reloadRows(at: [indexPath], with: .none)
+                    UIBlockingProgressHUD.dismiss()
                 }
             case .failure(_):
+                UIBlockingProgressHUD.dismiss()
                 assertionFailure()
             }
         }

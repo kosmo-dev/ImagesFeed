@@ -35,16 +35,6 @@ final class SplashScreenViewController: UIViewController {
         }
     }
     // MARK: - Private Methods
-    func switchToTabBarController() {
-        guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid config")
-            showAlertViewController()
-            return
-        }
-        let tabBarController = TabBarController()
-        window.rootViewController = tabBarController
-    }
-
     private func fetchProfile(token: String) {
         profileService.fetchProfile(token) { [weak self] result in
             guard let self else { return }
@@ -59,6 +49,16 @@ final class SplashScreenViewController: UIViewController {
                 showAlertViewController()
             }
         }
+    }
+
+    func switchToTabBarController() {
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Invalid config")
+            showAlertViewController()
+            return
+        }
+        let tabBarController = TabBarController()
+        window.rootViewController = tabBarController
     }
 
     private func showAlertViewController() {
