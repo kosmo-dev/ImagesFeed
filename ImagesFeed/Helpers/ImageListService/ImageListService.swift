@@ -15,6 +15,7 @@ final class ImageListService {
     private (set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
+    private let dateFormatter = ISO8601DateFormatter()
 
     func fetchPhotosNextPage() {
         guard task == nil else { return }
@@ -46,8 +47,7 @@ final class ImageListService {
                     self.lastLoadedPage = nextPage
                     self.task = nil
                 }
-            case .failure(let error):
-                assertionFailure(error.localizedDescription)
+            case .failure(_):
                 task = nil
                 return
             }
@@ -95,10 +95,11 @@ final class ImageListService {
     }
 
     private func convertToPhotoFrom(_ photoResult: PhotoResult) -> Photo {
+        let createdAt = photoResult.createdAt ?? ""
         let photo = Photo(
             id: photoResult.id,
             size: CGSize(width: photoResult.width, height: photoResult.height),
-            createdAt: photoResult.createdAt?.stringToDate,
+            createdAt: dateFormatter.date(from: createdAt),
             welcomeDescription: photoResult.description,
             thumbImageURL: photoResult.urls.thumb,
             largeImageURL: photoResult.urls.full,

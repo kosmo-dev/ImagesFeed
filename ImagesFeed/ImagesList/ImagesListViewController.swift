@@ -96,18 +96,22 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 
     private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        let date = dateFormatter.string(from: Date())
-        
+        let date = photos[indexPath.row].createdAt
+        var dateString: String?
+        if let date {
+            dateString = dateFormatter.string(from: date)
+        }
+
         guard let url = URL(string: photos[indexPath.row].thumbImageURL) else { return }
         cell.cellImageView.kf.indicatorType = .activity
         cell.cellImageView.kf.setImage(with: url, placeholder: UIImage(named: C.UIImages.imagePlaceholder)) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let image):
-                cell.configureElements(image: image.image, date: date, isLiked: photos[indexPath.row].isLiked)
+                cell.configureElements(image: image.image, date: dateString, isLiked: photos[indexPath.row].isLiked)
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
-            case .failure(let error):
-                assertionFailure(error.localizedDescription)
+            case .failure(_):
+                break
             }
         }
     }
@@ -155,7 +159,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 }
             case .failure(_):
                 UIBlockingProgressHUD.dismiss()
-                assertionFailure()
+                break
             }
         }
     }
@@ -165,7 +169,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
 extension ImagesListViewController {
     private var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateStyle = .long
+        formatter.dateStyle = .medium
         formatter.timeStyle = .none
         return formatter
     }

@@ -53,7 +53,6 @@ final class SplashScreenViewController: UIViewController {
 
     func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid config")
             showAlertViewController()
             return
         }

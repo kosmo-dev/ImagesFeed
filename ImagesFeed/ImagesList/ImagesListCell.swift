@@ -71,7 +71,6 @@ final class ImagesListCell: UITableViewCell {
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        assertionFailure("init(coder:) has not been implemented")
     }
 
     override func layoutSubviews() {
@@ -80,7 +79,7 @@ final class ImagesListCell: UITableViewCell {
     }
 
     // MARK: - Public Methods
-    func configureElements(image: UIImage, date: String, isLiked: Bool) {
+    func configureElements(image: UIImage, date: String?, isLiked: Bool) {
         cellImageView.image = image
         dateLabel.text = date
         setIsLiked(isLiked)
