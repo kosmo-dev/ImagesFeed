@@ -9,6 +9,11 @@ import Foundation
 
 final class ImageListService {
 
+    enum ImageListServiceError: Error {
+        case incorrectURL
+        case accessTokenNotFound
+    }
+
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
 
     private let urlSession = URLSession.shared
@@ -20,7 +25,7 @@ final class ImageListService {
     func fetchPhotosNextPage() {
         guard task == nil else { return }
 
-        let nextPage = (lastLoadedPage ?? 0) + 1
+        let nextPage = (lastLoadedPage ?? -1) + 1
 
         var urlComponents = URLComponents(string: C.UnsplashAPI.baseURL)
         urlComponents?.path = "/photos"
@@ -60,10 +65,16 @@ final class ImageListService {
         var urlComponents = URLComponents(string: C.UnsplashAPI.baseURL)
         urlComponents?.path = "/photos/\(photoId)/like"
 
-        guard let url = urlComponents?.url else { return }
+        guard let url = urlComponents?.url else {
+            completion(.failure(ImageListServiceError.incorrectURL))
+            return
+        }
 
         var request = URLRequest(url: url)
-        guard let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) else { return }
+        guard let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) else {
+            completion(.failure(ImageListServiceError.accessTokenNotFound))
+            return
+        }
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = isLike ? "POST" : "DELETE"
 

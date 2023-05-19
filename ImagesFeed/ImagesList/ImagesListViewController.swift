@@ -31,9 +31,7 @@ final class ImagesListViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
 
-        if photos.count == 0 {
-            imageListService.fetchPhotosNextPage()
-        }
+        imageListService.fetchPhotosNextPage()
 
         NotificationCenter.default.addObserver(forName: ImageListService.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
             guard let self else { return }
