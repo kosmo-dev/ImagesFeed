@@ -6,14 +6,21 @@
 //
 
 import UIKit
+import Kingfisher
+
+protocol ImagesListCellDelegate: AnyObject {
+    func imagesListCellLikeButtonTapped(_ cell: ImagesListCell)
+}
 
 final class ImagesListCell: UITableViewCell {
     // MARK: - Public Properties
     static let reuseIdentifier = "ImagesListCell"
+    weak var delegate: ImagesListCellDelegate?
 
     // MARK: - Private Properties
-    private let cellImageView: UIImageView = {
+    let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
+        cellImageView.contentMode = .scaleAspectFit
         cellImageView.layer.cornerRadius = 16
         cellImageView.layer.masksToBounds = true
         cellImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -24,6 +31,7 @@ final class ImagesListCell: UITableViewCell {
         let likeButton = UIButton()
         likeButton.setTitle("", for: .normal)
         likeButton.translatesAutoresizingMaskIntoConstraints = false
+        likeButton.addTarget(nil, action: #selector(likeButtonTapped), for: .touchUpInside)
         return likeButton
     }()
 
@@ -63,7 +71,6 @@ final class ImagesListCell: UITableViewCell {
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        assertionFailure("init(coder:) has not been implemented")
     }
 
     override func layoutSubviews() {
@@ -72,10 +79,23 @@ final class ImagesListCell: UITableViewCell {
     }
 
     // MARK: - Public Methods
-    func configureElements(image: UIImage, date: String, likeImage: UIImage) {
+    func configureElements(image: UIImage, date: String?, isLiked: Bool) {
         cellImageView.image = image
         dateLabel.text = date
-        likeButton.setImage(likeImage, for: .normal)
+        setIsLiked(isLiked)
+    }
+
+    func setIsLiked(_ isLiked: Bool) {
+        if isLiked {
+            likeButton.setImage(UIImage(named: C.UIImages.likeImageActive)!, for: .normal)
+        } else {
+            likeButton.setImage(UIImage(named: C.UIImages.likeImageNoActive)!, for: .normal)
+        }
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImageView.kf.cancelDownloadTask()
     }
 
     // MARK: - Private Methods
@@ -102,5 +122,9 @@ final class ImagesListCell: UITableViewCell {
             dateLabel.trailingAnchor.constraint(equalTo: gradientView.trailingAnchor, constant: -8),
             dateLabel.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor, constant: -8)
         ])
+    }
+
+    @objc private func likeButtonTapped() {
+        delegate?.imagesListCellLikeButtonTapped(self)
     }
 }

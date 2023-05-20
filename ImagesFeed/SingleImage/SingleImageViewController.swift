@@ -6,19 +6,11 @@
 //
 
 import UIKit
+import ProgressHUD
 
 final class SingleImageViewController: UIViewController {
     // MARK: - Public Properties
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    var image: UIImage! {
-        didSet {
-            guard isViewLoaded else { return }
-            imageView.image = image
-            rescaleAndCenterImageInScrollView(image: image)
-        }
-    }
+    var url: URL?
 
     // MARK: - Private Properties
     private let imageView: UIImageView = {
@@ -56,15 +48,23 @@ final class SingleImageViewController: UIViewController {
         return sharingButton
     }()
 
+    // MARK: - Initializer
+    init(url: URL) {
+        super.init(nibName: nil, bundle: nil)
+        self.url = url
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .YPBlack
 
-        configureLayout()
-        imageView.image = image
+        fetchPhoto()
         scrollView.delegate = self
-
-        rescaleAndCenterImageInScrollView(image: image)
     }
 
     // MARK: - Private Method
@@ -72,7 +72,7 @@ final class SingleImageViewController: UIViewController {
         dismiss(animated: true)
     }
     @objc private func didTapSharingButton() {
-        guard let image else { return }
+        guard let image = imageView.image else { return }
         let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityViewController, animated: true)
     }
@@ -92,6 +92,22 @@ final class SingleImageViewController: UIViewController {
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+    }
+
+    private func fetchPhoto() {
+        guard let url else { return }
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: url) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self else { return }
+            switch result {
+            case .success(let imageResult):
+                configureLayout()
+                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure(_):
+                self.showError()
+            }
+        }
     }
 
     private func configureLayout() {
@@ -123,6 +139,19 @@ final class SingleImageViewController: UIViewController {
             sharingButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             sharingButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -51)
         ])
+    }
+
+    private func showError() {
+        let alertVC = UIAlertController(title: "Ошибка", message: "Что-то пошло не так", preferredStyle: .alert)
+        let againAction = UIAlertAction(title: "Попробовать еще раз", style: .default) { [weak self] _ in
+            self?.fetchPhoto()
+        }
+        let cancelAction = UIAlertAction(title: "Отмена", style: .default) { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+        alertVC.addAction(againAction)
+        alertVC.addAction(cancelAction)
+        present(alertVC, animated: true)
     }
 }
 

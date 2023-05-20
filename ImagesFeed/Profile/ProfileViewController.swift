@@ -7,6 +7,8 @@
 
 import UIKit
 import Kingfisher
+import ProgressHUD
+import WebKit
 
 final class ProfileViewController: UIViewController {
     // MARK: - Private Properties
@@ -50,9 +52,11 @@ final class ProfileViewController: UIViewController {
 
     private let exitButton: UIButton = {
         let image = UIImage(systemName: "ipad.and.arrow.forward") ?? UIImage()
-        let exitButton = UIButton.systemButton(with: image, target: nil, action: #selector(exitButtonTapped))
+        let exitButton = UIButton()
+        exitButton.setImage(image, for: .normal)
         exitButton.imageView?.contentMode = .scaleAspectFill
         exitButton.tintColor = UIColor.YPRed
+        exitButton.addTarget(nil, action: #selector(showLogoutAlert), for: .touchUpInside)
         exitButton.translatesAutoresizingMaskIntoConstraints = false
         return exitButton
     }()
@@ -69,9 +73,6 @@ final class ProfileViewController: UIViewController {
     }
 
     // MARK: - Private Methods
-    @objc private func exitButtonTapped() {
-    }
-
     private func configureConstraints() {
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: 70),
@@ -116,15 +117,35 @@ final class ProfileViewController: UIViewController {
         imageView.kf.setImage(with: url, placeholder: placeholderImage, options: [.processor(processor)])
     }
 
-    private func clearImageCache() {
-        let cache = ImageCache.default
-        cache.clearMemoryCache()
-        cache.clearDiskCache()
-    }
-
     private func updateProfileDetails(profile: Profile) {
         nameLabel.text = profile.name
         loginLabel.text = profile.loginName
         descriptionLabel.text = profile.bio
+    }
+
+    @objc private func showLogoutAlert() {
+        let alertController = UIAlertController(title: "Пока, пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
+        let alertYes = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            self?.logout()
+        }
+        let alertNo = UIAlertAction(title: "Нет", style: .default)
+        alertController.addAction(alertYes)
+        alertController.addAction(alertNo)
+        present(alertController, animated: true)
+    }
+
+    private func logout() {
+        UIBlockingProgressHUD.show()
+        guard let window = UIApplication.shared.windows.first else { return }
+        guard KeychainManager.shared.removeObject(forKey: C.Keychain.accessToken) else { return }
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+        let splashViewController = SplashScreenViewController()
+        window.rootViewController = splashViewController
+        UIBlockingProgressHUD.dismiss()
     }
 }
