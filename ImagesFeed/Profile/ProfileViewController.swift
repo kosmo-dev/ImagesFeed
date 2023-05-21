@@ -15,6 +15,7 @@ final class ProfileViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    private var animationLayers = Set<CALayer>()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -68,6 +69,7 @@ final class ProfileViewController: UIViewController {
         [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
         view.backgroundColor = .YPBlack
         subscribeForAvatarUpdates()
+        setAnimatableGradient()
         updateAvatar()
         configureConstraints()
     }
@@ -111,10 +113,16 @@ final class ProfileViewController: UIViewController {
 
     private func updateAvatar() {
         guard let profileImageURL = profileImageService.avatarURL, let url = URL(string: profileImageURL) else { return }
-        let placeholderImage = UIImage(systemName: C.UIImages.personPlaceholder)
-        let processor = RoundCornerImageProcessor(radius: .point(61), roundingCorners: .all, backgroundColor: .clear)
+        let processor = RoundCornerImageProcessor(radius: .point(61))
 
-        imageView.kf.setImage(with: url, placeholder: placeholderImage, options: [.processor(processor)])
+        imageView.kf.setImage(with: url, options: [.processor(processor)]) { [weak self] result in
+            switch result {
+            case .success(_):
+                self?.removeGradient()
+            case .failure(_):
+                self?.imageView.image = UIImage(named: C.UIImages.personPlaceholder)
+            }
+        }
     }
 
     private func updateProfileDetails(profile: Profile) {
@@ -147,5 +155,35 @@ final class ProfileViewController: UIViewController {
         let splashViewController = SplashScreenViewController()
         window.rootViewController = splashViewController
         UIBlockingProgressHUD.dismiss()
+    }
+
+    private func setAnimatableGradient() {
+        let gradient = CAGradientLayer()
+        gradient.frame = CGRect(origin: .zero, size: CGSize(width: 70, height: 70))
+        gradient.locations = [0, 0.1, 0.3]
+        gradient.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
+        ]
+        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.cornerRadius = 35
+        gradient.masksToBounds = true
+        animationLayers.insert(gradient)
+        imageView.layer.addSublayer(gradient)
+
+        let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+        gradientChangeAnimation.duration = 1
+        gradientChangeAnimation.repeatCount = .infinity
+        gradientChangeAnimation.fromValue = [0, 0.1, 0.3]
+        gradientChangeAnimation.toValue = [0, 0.8, 1]
+        gradient.add(gradientChangeAnimation, forKey: "locationsChange")
+    }
+
+    private func removeGradient() {
+        animationLayers.forEach { layer in
+            layer.removeFromSuperlayer()
+        }
     }
 }

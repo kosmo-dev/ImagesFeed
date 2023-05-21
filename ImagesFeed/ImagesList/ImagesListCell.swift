@@ -17,7 +17,6 @@ final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
     weak var delegate: ImagesListCellDelegate?
 
-    // MARK: - Private Properties
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
         cellImageView.contentMode = .scaleAspectFit
@@ -26,6 +25,9 @@ final class ImagesListCell: UITableViewCell {
         cellImageView.translatesAutoresizingMaskIntoConstraints = false
         return cellImageView
     }()
+
+    // MARK: - Private Properties
+    private var animationLayers = Set<CALayer>()
 
     private let likeButton: UIButton = {
         let likeButton = UIButton()
@@ -62,11 +64,25 @@ final class ImagesListCell: UITableViewCell {
         return gradient
     }()
 
+    private let animatableGradient: CAGradientLayer = {
+        let animatableGradient = CAGradientLayer()
+        animatableGradient.locations = [0, 0.1, 0.3]
+        animatableGradient.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
+        ]
+        animatableGradient.startPoint = CGPoint(x: 0, y: 0.5)
+        animatableGradient.endPoint = CGPoint(x: 1, y: 0.5)
+        animatableGradient.cornerRadius = 16
+        animatableGradient.masksToBounds = true
+        return animatableGradient
+    }()
+
     // MARK: - Initialisers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureView()
-        gradientView.layer.addSublayer(gradient)
     }
 
     required init?(coder: NSCoder) {
@@ -76,6 +92,7 @@ final class ImagesListCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         gradient.frame = gradientView.bounds
+        animatableGradient.frame = cellImageView.bounds
     }
 
     // MARK: - Public Methods
@@ -83,6 +100,8 @@ final class ImagesListCell: UITableViewCell {
         cellImageView.image = image
         dateLabel.text = date
         setIsLiked(isLiked)
+        gradientView.layer.addSublayer(gradient)
+        removeAnimatableGradient()
     }
 
     func setIsLiked(_ isLiked: Bool) {
@@ -93,9 +112,22 @@ final class ImagesListCell: UITableViewCell {
         }
     }
 
+    func setAnimatableGradient() {
+        animationLayers.insert(animatableGradient)
+        cellImageView.layer.addSublayer(animatableGradient)
+
+        let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+        gradientChangeAnimation.duration = 1
+        gradientChangeAnimation.repeatCount = .infinity
+        gradientChangeAnimation.fromValue = [0, 0.1, 0.3]
+        gradientChangeAnimation.toValue = [0, 0.8, 1]
+        animatableGradient.add(gradientChangeAnimation, forKey: "locationsChange")
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
         cellImageView.kf.cancelDownloadTask()
+        removeAnimatableGradient()
     }
 
     // MARK: - Private Methods
@@ -126,5 +158,11 @@ final class ImagesListCell: UITableViewCell {
 
     @objc private func likeButtonTapped() {
         delegate?.imagesListCellLikeButtonTapped(self)
+    }
+
+    private func removeAnimatableGradient() {
+        animationLayers.forEach { layer in
+            layer.removeFromSuperlayer()
+        }
     }
 }
