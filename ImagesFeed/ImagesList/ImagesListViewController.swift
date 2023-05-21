@@ -101,15 +101,17 @@ extension ImagesListViewController: UITableViewDataSource {
         }
 
         guard let url = URL(string: photos[indexPath.row].thumbImageURL) else { return }
-        cell.cellImageView.kf.indicatorType = .activity
-        cell.cellImageView.kf.setImage(with: url, placeholder: UIImage(named: C.UIImages.imagePlaceholder)) { [weak self] result in
+        cell.setAnimatableGradient()
+        cell.cellImageView.kf.setImage(with: url) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let image):
                 cell.configureElements(image: image.image, date: dateString, isLiked: photos[indexPath.row].isLiked)
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
             case .failure(_):
-                break
+                guard let placeholderImage = UIImage(named: C.UIImages.imagePlaceholder) else { return }
+                cell.configureElements(image: placeholderImage, date: nil, isLiked: false)
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
             }
         }
     }
