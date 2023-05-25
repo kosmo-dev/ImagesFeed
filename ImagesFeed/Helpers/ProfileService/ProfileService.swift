@@ -57,7 +57,9 @@ final class ProfileService {
     private func convertResponse(from response: ProfileResult) -> Profile {
         let username = response.username
         let bio = response.bio ?? ""
-        let name = "\(response.firstName) \(response.lastName)"
+        let firstName = response.firstName ?? ""
+        let lastName = response.lastName ?? ""
+        let name = "\(firstName) \(lastName)"
         let loginName = "@\(response.username)"
 
         let profile = Profile(username: username, bio: bio, name: name, loginName: loginName)

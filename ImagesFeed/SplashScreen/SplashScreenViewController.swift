@@ -27,7 +27,7 @@ final class SplashScreenViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         configureLayout()
-        
+
         if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
             fetchProfile(token: token)
         } else {

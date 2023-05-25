@@ -48,7 +48,7 @@ final class ProfileImageService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         let dataTask = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
-            guard let self else { print("self does not exist profileimageservice"); return}
+            guard let self else { return }
             switch result {
             case .success(let data):
                 self.avatarURL = data.profileImage.small
