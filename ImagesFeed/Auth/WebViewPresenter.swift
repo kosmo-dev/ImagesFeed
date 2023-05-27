@@ -23,10 +23,6 @@ final class WebViewPresenter: WebViewPresenterProtocol {
         self.authHelper = authHelper
     }
 
-    deinit {
-        print("presenter deinited")
-    }
-
     // MARK: - Public Methods
     func viewDidLoad() {
 
@@ -36,7 +32,6 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     }
 
     func didUpdateProgressValue(_ newValue: Double) {
-        print("didupdateprogresscalled")
         let newProgressValue = Float(newValue)
         view?.setProgressValue(newProgressValue)
 
@@ -45,7 +40,6 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     }
 
     func shouldHideProgress(for value: Float) -> Bool {
-        print(value - 1.0)
         return abs(value - 1.0) <= 0.0001
     }
 

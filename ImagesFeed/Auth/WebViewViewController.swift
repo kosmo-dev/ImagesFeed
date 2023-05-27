@@ -69,20 +69,16 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
     
     func setProgressValue(_ newValue: Float) {
         progressView.progress = newValue
-        print("set progressview called")
     }
 
     func setProgressHidden(_ isHidden: Bool) {
         progressView.isHidden = isHidden
-        print("hide progressview called", isHidden)
     }
 
     // MARK: - Private Methods
     private func configureProgressObserver() {
         estimatedProgressObservation = webView.observe(\.estimatedProgress, changeHandler: { [weak self] _, _ in
             guard let self else { return }
-            print(webView.estimatedProgress)
-            print("presenter", presenter)
             self.presenter?.didUpdateProgressValue(webView.estimatedProgress)
         })
     }

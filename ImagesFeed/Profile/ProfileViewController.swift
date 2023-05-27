@@ -6,16 +6,17 @@
 //
 
 import UIKit
-import Kingfisher
-import ProgressHUD
-import WebKit
+
+protocol ProfileViewControllerProtocol: AnyObject {
+    func updateProfileDetails(profile: Profile)
+    func updateProfileImage(with image: UIImage)
+}
 
 final class ProfileViewController: UIViewController {
     // MARK: - Private Properties
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
     private var animationLayers = Set<CALayer>()
+
+    private var presenter: ProfilePresenterProtocol?
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -62,15 +63,27 @@ final class ProfileViewController: UIViewController {
         return exitButton
     }()
 
+    // MARK: - Initializer
+    init(presenter: ProfilePresenterProtocol) {
+        super.init(nibName: nil, bundle: nil)
+        self.presenter = presenter
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        presenter?.view = self
+
         [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
         view.backgroundColor = .YPBlack
-        subscribeForAvatarUpdates()
+        presenter?.subscribeForAvatarUpdates()
         setAnimatableGradient()
-        updateAvatar()
+        presenter?.updateAvatar()
         configureConstraints()
     }
 
@@ -96,65 +109,15 @@ final class ProfileViewController: UIViewController {
         ])
     }
 
-    private func subscribeForAvatarUpdates() {
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: profileImageService.didChangeNotification,
-            object: nil,
-            queue: .main,
-            using: { [weak self] _ in
-                guard let self else { return }
-                self.updateAvatar()
-            }
-        )
-        if let profile = profileService.profile {
-            updateProfileDetails(profile: profile)
-        }
-    }
-
-    private func updateAvatar() {
-        guard let profileImageURL = profileImageService.avatarURL, let url = URL(string: profileImageURL) else { return }
-        let processor = RoundCornerImageProcessor(radius: .point(61))
-
-        imageView.kf.setImage(with: url, options: [.processor(processor)]) { [weak self] result in
-            switch result {
-            case .success(_):
-                self?.removeGradient()
-            case .failure(_):
-                self?.imageView.image = UIImage(named: C.UIImages.personPlaceholder)
-            }
-        }
-    }
-
-    private func updateProfileDetails(profile: Profile) {
-        nameLabel.text = profile.name
-        loginLabel.text = profile.loginName
-        descriptionLabel.text = profile.bio
-    }
-
     @objc private func showLogoutAlert() {
         let alertController = UIAlertController(title: "Пока, пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
         let alertYes = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-            self?.logout()
+            self?.presenter?.logout()
         }
         let alertNo = UIAlertAction(title: "Нет", style: .default)
         alertController.addAction(alertYes)
         alertController.addAction(alertNo)
         present(alertController, animated: true)
-    }
-
-    private func logout() {
-        UIBlockingProgressHUD.show()
-        guard let window = UIApplication.shared.windows.first else { return }
-        guard KeychainManager.shared.removeObject(forKey: C.Keychain.accessToken) else { return }
-        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-            records.forEach { record in
-                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-            }
-        }
-        let splashViewController = SplashScreenViewController()
-        window.rootViewController = splashViewController
-        UIBlockingProgressHUD.dismiss()
     }
 
     private func setAnimatableGradient() {
@@ -185,5 +148,18 @@ final class ProfileViewController: UIViewController {
         animationLayers.forEach { layer in
             layer.removeFromSuperlayer()
         }
+    }
+}
+
+extension ProfileViewController: ProfileViewControllerProtocol {
+    func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        loginLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
+    }
+
+    func updateProfileImage(with image: UIImage) {
+        removeGradient()
+        imageView.image = image
     }
 }
