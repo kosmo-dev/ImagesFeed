@@ -18,12 +18,22 @@ protocol ProfilePresenterProtocol: AnyObject {
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
-    private var profileImageServiceObserver: NSObjectProtocol?
-    private let profileImageService = ProfileImageService.shared
-    private let profileService = ProfileService.shared
-
+    // MARK: - Public Properties
     weak var view: ProfileViewControllerProtocol?
 
+    // MARK: - Private Properties
+    private var profileImageServiceObserver: NSObjectProtocol?
+    private let profileImageService = ProfileImageService.shared
+    private let profileService: ProfileServiceProtocol
+    private let imageDownloadHelper: ImageDownloadHelperProtocol
+
+    // MARK: Initializers
+    init(imageDownloadHelper: ImageDownloadHelperProtocol, profileService: ProfileServiceProtocol) {
+        self.imageDownloadHelper = imageDownloadHelper
+        self.profileService = profileService
+    }
+
+    // MARK: - Public Methods
     func logout() {
         UIBlockingProgressHUD.show()
         guard let window = UIApplication.shared.windows.first else { return }
@@ -34,7 +44,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
             }
         }
-        let splashViewController = SplashScreenViewController()
+        let splashViewController = SplashScreenViewController(profileService: profileService)
         window.rootViewController = splashViewController
         UIBlockingProgressHUD.dismiss()
     }
@@ -58,13 +68,15 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         guard let profileImageURL = profileImageService.avatarURL, let url = URL(string: profileImageURL) else { return }
         let processor = RoundCornerImageProcessor(radius: .point(61))
 
-        KingfisherManager.shared.retrieveImage(with: url, options: [.processor(processor)]) { [weak self] result in
+        imageDownloadHelper.fetchImage(url: url, options: [.processor(processor)]) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let imageResult):
-                self.view?.updateProfileImage(with: imageResult.image)
+            case .success(let image):
+                self.view?.updateProfileImage(with: image)
             case .failure(_):
-                self.view?.updateProfileImage(with: UIImage(named: C.UIImages.personPlaceholder)!)
+                if let placeholderImage = UIImage(named: C.UIImages.personPlaceholder) {
+                    self.view?.updateProfileImage(with: placeholderImage)
+                }
             }
         }
     }    

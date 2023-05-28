@@ -12,9 +12,12 @@ final class SplashScreenViewController: UIViewController {
     // MARK: - Private Properties
     private let showBaseFlowSegueID = "showBaseFlow"
     private let showAuthFlowSegueID = "showAuthFlow"
-    private let profileService = ProfileService.shared
+//    private let profileService: ProfileServiceProtocol?
+    private lazy var profileService = factory.makeProfileService()
     private let profileImageService = ProfileImageService.shared
     private let oAuth2Service = Oauth2Service()
+
+    private let factory: ProfileServiceFactory
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -22,6 +25,21 @@ final class SplashScreenViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+
+    // MARK: - Initializers
+//    init(profileService: ProfileServiceProtocol) {
+//        self.profileService = profileService
+//        super.init(nibName: nil, bundle: nil)
+//    }
+
+    init(factory: ProfileServiceFactory) {
+        self.factory = factory
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
 
     // MARK: - View Life Cycle
     override func viewDidAppear(_ animated: Bool) {
