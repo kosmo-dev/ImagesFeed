@@ -13,8 +13,6 @@ protocol ProfileServiceProtocol {
 }
 
 final class ProfileService: ProfileServiceProtocol {
-//    static let shared = ProfileService()
-
     // MARK: - Private Properties
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?

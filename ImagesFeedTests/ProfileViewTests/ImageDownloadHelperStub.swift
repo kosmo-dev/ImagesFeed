@@ -10,21 +10,10 @@ import UIKit
 import Kingfisher
 
 final class ImageDownloadHelperStub: ImageDownloadHelperProtocol {
-
-    enum URLTestPath: String {
-        case success
-        case failure
-    }
-
-    struct ImagesTest {
-        static let successImage = UIImage(systemName: "checkmark")!
-        static let failureImage = UIImage(systemName: "xmark")
-    }
-
     func fetchImage(url: URL, options: Kingfisher.KingfisherOptionsInfo?, completion: @escaping (Result<UIImage, Error>) -> Void) {
-        if url.absoluteString == URLTestPath.success.rawValue {
-            completion(.success(ImagesTest.successImage))
-        } else if url.absoluteString == URLTestPath.failure.rawValue {
+        if url == URLMock.success {
+            completion(.success(ImagesMock.successImage))
+        } else if url == URLMock.failure {
             completion(.failure(KingfisherError.requestError(reason: .emptyRequest)))
         }
     }

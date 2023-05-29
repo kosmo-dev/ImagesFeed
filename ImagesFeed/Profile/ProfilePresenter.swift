@@ -23,14 +23,15 @@ final class ProfilePresenter: ProfilePresenterProtocol {
 
     // MARK: - Private Properties
     private var profileImageServiceObserver: NSObjectProtocol?
-    private let profileImageService = ProfileImageService.shared
+    private let profileImageService: ProfileImageServiceProtocol
     private let profileService: ProfileServiceProtocol
     private let imageDownloadHelper: ImageDownloadHelperProtocol
 
     // MARK: Initializers
-    init(imageDownloadHelper: ImageDownloadHelperProtocol, profileService: ProfileServiceProtocol) {
+    init(imageDownloadHelper: ImageDownloadHelperProtocol, profileService: ProfileServiceProtocol, profileImageService: ProfileImageServiceProtocol) {
         self.imageDownloadHelper = imageDownloadHelper
         self.profileService = profileService
+        self.profileImageService = profileImageService
     }
 
     // MARK: - Public Methods
@@ -44,7 +45,9 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
             }
         }
-        let splashViewController = SplashScreenViewController(profileService: profileService)
+        let newProfileService = ProfileService()
+        let newProfileImageService = ProfileImageService()
+        let splashViewController = SplashScreenViewController(profileService: newProfileService, profileImageService: newProfileImageService)
         window.rootViewController = splashViewController
         UIBlockingProgressHUD.dismiss()
     }

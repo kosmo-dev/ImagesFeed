@@ -8,6 +8,7 @@
 import UIKit
 
 protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol { get }
     func updateProfileDetails(profile: Profile)
     func updateProfileImage(with image: UIImage)
 }
@@ -16,7 +17,7 @@ final class ProfileViewController: UIViewController {
     // MARK: - Private Properties
     private var animationLayers = Set<CALayer>()
 
-    private var presenter: ProfilePresenterProtocol?
+    private (set) var presenter: ProfilePresenterProtocol
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -65,25 +66,25 @@ final class ProfileViewController: UIViewController {
 
     // MARK: - Initializer
     init(presenter: ProfilePresenterProtocol) {
-        super.init(nibName: nil, bundle: nil)
         self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        presenter?.view = self
+        presenter.view = self
 
         [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
         view.backgroundColor = .YPBlack
-        presenter?.subscribeForAvatarUpdates()
+        presenter.subscribeForAvatarUpdates()
         setAnimatableGradient()
-        presenter?.updateAvatar()
+        presenter.updateAvatar()
         configureConstraints()
     }
 
@@ -112,7 +113,7 @@ final class ProfileViewController: UIViewController {
     @objc private func showLogoutAlert() {
         let alertController = UIAlertController(title: "Пока, пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
         let alertYes = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-            self?.presenter?.logout()
+            self?.presenter.logout()
         }
         let alertNo = UIAlertAction(title: "Нет", style: .default)
         alertController.addAction(alertYes)

@@ -12,12 +12,9 @@ final class SplashScreenViewController: UIViewController {
     // MARK: - Private Properties
     private let showBaseFlowSegueID = "showBaseFlow"
     private let showAuthFlowSegueID = "showAuthFlow"
-//    private let profileService: ProfileServiceProtocol?
-    private lazy var profileService = factory.makeProfileService()
-    private let profileImageService = ProfileImageService.shared
+    private let profileService: ProfileServiceProtocol
+    private let profileImageService: ProfileImageServiceProtocol
     private let oAuth2Service = Oauth2Service()
-
-    private let factory: ProfileServiceFactory
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -27,18 +24,14 @@ final class SplashScreenViewController: UIViewController {
     }()
 
     // MARK: - Initializers
-//    init(profileService: ProfileServiceProtocol) {
-//        self.profileService = profileService
-//        super.init(nibName: nil, bundle: nil)
-//    }
-
-    init(factory: ProfileServiceFactory) {
-        self.factory = factory
+    init(profileService: ProfileServiceProtocol, profileImageService: ProfileImageServiceProtocol) {
+        self.profileService = profileService
+        self.profileImageService = profileImageService
         super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - View Life Cycle
@@ -74,7 +67,7 @@ final class SplashScreenViewController: UIViewController {
             showAlertViewController()
             return
         }
-        let tabBarController = TabBarController()
+        let tabBarController = TabBarController(profileService: profileService, profileImageService: profileImageService)
         window.rootViewController = tabBarController
     }
 

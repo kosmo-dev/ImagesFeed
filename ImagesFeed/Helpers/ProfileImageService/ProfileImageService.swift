@@ -11,15 +11,18 @@ enum ProfileImageServiceError: Error {
     case noAccessToken
 }
 
-final class ProfileImageService {
-    static let shared = ProfileImageService()
-    let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
+protocol ProfileImageServiceProtocol {
+    var didChangeNotification: Notification.Name { get }
+    var avatarURL: String? { get }
+    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void)
+}
+
+final class ProfileImageService: ProfileImageServiceProtocol {
+    private (set) var didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
     
     private (set) var avatarURL: String?
     private var task: URLSessionTask?
     private var fetchedUsernames = [String: String]()
-
-    private init() {}
 
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         guard task == nil else { return }

@@ -25,7 +25,7 @@ final class ImageListService {
     func fetchPhotosNextPage() {
         guard task == nil else { return }
 
-        let nextPage = (lastLoadedPage ?? -1) + 1
+        let nextPage = (lastLoadedPage ?? 0) + 1
 
         var urlComponents = URLComponents(string: C.UnsplashAPI.baseURL)
         urlComponents?.path = "/photos"
