@@ -10,6 +10,7 @@ import Kingfisher
 
 protocol ImagesListCellDelegate: AnyObject {
     func imagesListCellLikeButtonTapped(_ cell: ImagesListCell)
+    func cancelImageDownloadTask(for url: URL)
 }
 
 final class ImagesListCell: UITableViewCell {
@@ -28,6 +29,7 @@ final class ImagesListCell: UITableViewCell {
 
     // MARK: - Private Properties
     private var animationLayers = Set<CALayer>()
+    private var imageURL: URL?
 
     private let likeButton: UIButton = {
         let likeButton = UIButton()
@@ -96,11 +98,12 @@ final class ImagesListCell: UITableViewCell {
     }
 
     // MARK: - Public Methods
-    func configureElements(image: UIImage, date: String?, isLiked: Bool) {
+    func configureElements(image: UIImage, date: String?, isLiked: Bool, imageURL: URL) {
         cellImageView.image = image
         dateLabel.text = date
         setIsLiked(isLiked)
         gradientView.layer.addSublayer(gradient)
+        self.imageURL = imageURL
         removeAnimatableGradient()
     }
 
@@ -126,7 +129,10 @@ final class ImagesListCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        cellImageView.kf.cancelDownloadTask()
+        dateLabel.text = nil
+        if let imageURL {
+            delegate?.cancelImageDownloadTask(for: imageURL)
+        }
         removeAnimatableGradient()
     }
 

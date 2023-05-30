@@ -20,7 +20,7 @@ final class ProfileViewControllerSpy: ProfileViewControllerProtocol {
     }
 
     func updateProfileDetails(profile: ImagesFeed.Profile) {
-
+        self.profile = profile
     }
     func updateProfileImage(with image: UIImage) {
         self.image = image
