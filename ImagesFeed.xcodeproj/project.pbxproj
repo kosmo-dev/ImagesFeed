@@ -18,6 +18,7 @@
 		3D41D7C32A21439700AB5FA0 /* WebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D41D7C22A21439700AB5FA0 /* WebViewTests.swift */; };
 		3D41D7CA2A21448F00AB5FA0 /* WebViewPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D41D7C92A21448F00AB5FA0 /* WebViewPresenterSpy.swift */; };
 		3D41D7CC2A21487200AB5FA0 /* WebViewViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D41D7CB2A21487200AB5FA0 /* WebViewViewControllerSpy.swift */; };
+		3D49EE3B2A25440700AFA7B1 /* ImagesListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D49EE3A2A25440700AFA7B1 /* ImagesListPresenter.swift */; };
 		3D4BDBA72A02E76E00B87AAD /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 3D4BDBA62A02E76E00B87AAD /* Kingfisher */; };
 		3D4BDBA92A03ADBB00B87AAD /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4BDBA82A03ADBB00B87AAD /* KeychainManager.swift */; };
 		3D4FC68629C74B14008E3812 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4FC68529C74B14008E3812 /* AppDelegate.swift */; };
@@ -79,6 +80,7 @@
 		3D41D7C22A21439700AB5FA0 /* WebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewTests.swift; sourceTree = "<group>"; };
 		3D41D7C92A21448F00AB5FA0 /* WebViewPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewPresenterSpy.swift; sourceTree = "<group>"; };
 		3D41D7CB2A21487200AB5FA0 /* WebViewViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewControllerSpy.swift; sourceTree = "<group>"; };
+		3D49EE3A2A25440700AFA7B1 /* ImagesListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListPresenter.swift; sourceTree = "<group>"; };
 		3D4BDBA82A03ADBB00B87AAD /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		3D4FC68229C74B14008E3812 /* ImagesFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImagesFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D4FC68529C74B14008E3812 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -140,10 +142,18 @@
 		3D41D7C12A21439700AB5FA0 /* ImagesFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				3D49EE3C2A269B4700AFA7B1 /* ImagesListViewTests */,
 				3D95A3362A24BF37000BFCDD /* ProfileViewTests */,
 				3D95A3352A24BF24000BFCDD /* WebViewTests */,
 			);
 			path = ImagesFeedTests;
+			sourceTree = "<group>";
+		};
+		3D49EE3C2A269B4700AFA7B1 /* ImagesListViewTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ImagesListViewTests;
 			sourceTree = "<group>";
 		};
 		3D4FC67929C74B14008E3812 = {
@@ -198,7 +208,6 @@
 			children = (
 				3D5ED18F29D6CA0A00266E23 /* ProfileViewController.swift */,
 				3D3F76D62A2200FF00BBBF3C /* ProfilePresenter.swift */,
-				3D3F76DA2A23589A00BBBF3C /* ImageDownloadHelper.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -228,9 +237,9 @@
 				3D3F76DC2A236A6500BBBF3C /* ImageDownloadHelperStub.swift */,
 				3D95A32F2A24B244000BFCDD /* ProfileServiceStub.swift */,
 				3D95A3312A24BD66000BFCDD /* ProfileImageServiceStub.swift */,
+				3D95A3372A24C01D000BFCDD /* ProfileViewControllerSpy.swift */,
 				3D95A3332A24BDB8000BFCDD /* URLMock.swift */,
 				3D95A3392A24C1FF000BFCDD /* ImagesMock.swift */,
-				3D95A3372A24C01D000BFCDD /* ProfileViewControllerSpy.swift */,
 			);
 			path = ProfileViewTests;
 			sourceTree = "<group>";
@@ -239,6 +248,7 @@
 			isa = PBXGroup;
 			children = (
 				3D4FC68929C74B14008E3812 /* ImagesListViewController.swift */,
+				3D49EE3A2A25440700AFA7B1 /* ImagesListPresenter.swift */,
 				3DA13EC729CA392300C89DE5 /* ImagesListCell.swift */,
 			);
 			path = ImagesList;
@@ -254,6 +264,7 @@
 				3D6F87F229FC3805009929C9 /* UIBlockingProgressHUD.swift */,
 				3D4BDBA82A03ADBB00B87AAD /* KeychainManager.swift */,
 				3DAE7D3B2A0EE208007AFEDF /* String+Extension.swift */,
+				3D3F76DA2A23589A00BBBF3C /* ImageDownloadHelper.swift */,
 				3DAE7D342A0ED5E8007AFEDF /* ImageListService */,
 				3DF5196329FD2EF000A95E9A /* ProfileService */,
 				3D5E785C2A0014520084534A /* ProfileImageService */,
@@ -467,6 +478,7 @@
 				3DB599ED29F6EA7F008E2174 /* SplashScreenViewController.swift in Sources */,
 				3D6F87F529FC619C009929C9 /* ProfileService.swift in Sources */,
 				3D4FC69A29C755DF008E3812 /* UIColor+Extensions.swift in Sources */,
+				3D49EE3B2A25440700AFA7B1 /* ImagesListPresenter.swift in Sources */,
 				3DB2BD6D29FE680100D7FF24 /* ProfileImageService.swift in Sources */,
 				3D3F76D72A2200FF00BBBF3C /* ProfilePresenter.swift in Sources */,
 				3D4BDBA92A03ADBB00B87AAD /* KeychainManager.swift in Sources */,
