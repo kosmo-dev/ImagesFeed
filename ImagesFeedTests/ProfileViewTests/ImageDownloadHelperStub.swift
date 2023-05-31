@@ -17,4 +17,7 @@ final class ImageDownloadHelperStub: ImageDownloadHelperProtocol {
             completion(.failure(KingfisherError.requestError(reason: .emptyRequest)))
         }
     }
+
+    func cancelImageDownload(for url: URL) {}
+
 }

@@ -18,11 +18,15 @@ protocol ImagesListPresenterProtocol {
 }
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
+    // MARK: - Public Properties
     weak var view: ImagesListViewControllerProtocol?
     private (set) var photos: [Photo] = []
+
+    // MARK: - Private Properties
     private var imageDownloadHelper: ImageDownloadHelperProtocol
     private let imageListService: ImageListServiceProtocol
 
+    // MARK: - Initializer
     init(imageDownloadHelper: ImageDownloadHelperProtocol, imageListService: ImageListServiceProtocol) {
         self.imageDownloadHelper = imageDownloadHelper
         self.imageListService = imageListService
@@ -32,6 +36,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         }
     }
 
+    // MARK: - Public Methods
     func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let date = photos[indexPath.row].createdAt
         var dateString: String?

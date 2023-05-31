@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Kingfisher
 import ProgressHUD
 
 protocol ImagesListViewControllerProtocol: AnyObject {
@@ -122,6 +121,7 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - ImagesListCellDelegate
 extension ImagesListViewController: ImagesListCellDelegate {
     func imagesListCellLikeButtonTapped(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
