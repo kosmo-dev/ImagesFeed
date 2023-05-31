@@ -34,6 +34,7 @@ final class ImagesListCell: UITableViewCell {
     private let likeButton: UIButton = {
         let likeButton = UIButton()
         likeButton.setTitle("", for: .normal)
+        likeButton.accessibilityIdentifier = C.AccessibilityIdentifilers.likeButton
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         likeButton.addTarget(nil, action: #selector(likeButtonTapped), for: .touchUpInside)
         return likeButton

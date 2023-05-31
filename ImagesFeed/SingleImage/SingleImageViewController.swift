@@ -34,6 +34,7 @@ final class SingleImageViewController: UIViewController {
         backButton.addTarget(nil, action: #selector(didTapBackButton), for: .touchUpInside)
         backButton.setTitle("", for: .normal)
         backButton.imageView?.contentMode = .scaleAspectFill
+        backButton.accessibilityIdentifier = C.AccessibilityIdentifilers.navigationBackButton
         backButton.translatesAutoresizingMaskIntoConstraints = false
         return backButton
     }()

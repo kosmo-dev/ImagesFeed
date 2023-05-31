@@ -60,6 +60,7 @@ final class ProfileViewController: UIViewController {
         exitButton.imageView?.contentMode = .scaleAspectFill
         exitButton.tintColor = UIColor.YPRed
         exitButton.addTarget(nil, action: #selector(showLogoutAlert), for: .touchUpInside)
+        exitButton.accessibilityIdentifier = C.AccessibilityIdentifilers.logoutButton
         exitButton.translatesAutoresizingMaskIntoConstraints = false
         return exitButton
     }()

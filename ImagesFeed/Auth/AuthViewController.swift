@@ -27,6 +27,7 @@ final class AuthViewController: UIViewController {
         enterButton.addTarget(nil, action: #selector(enterButtonTapped), for: .touchUpInside)
         enterButton.layer.cornerRadius = 16
         enterButton.layer.masksToBounds = true
+        enterButton.accessibilityIdentifier = C.AccessibilityIdentifilers.authenticateButton
         enterButton.translatesAutoresizingMaskIntoConstraints = false
         return enterButton
     }()
