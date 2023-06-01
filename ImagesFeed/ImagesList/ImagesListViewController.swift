@@ -117,6 +117,8 @@ extension ImagesListViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard indexPath.row + 1 == presenter.photos.count else { return }
+        guard let visibleIndexPaths = tableView.indexPathsForVisibleRows,
+              visibleIndexPaths.contains(indexPath) else { return }
         presenter.fetchPhotosNextPage()
     }
 }

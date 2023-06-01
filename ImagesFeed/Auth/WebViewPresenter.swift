@@ -17,7 +17,9 @@ protocol WebViewPresenterProtocol: AnyObject {
 final class WebViewPresenter: WebViewPresenterProtocol {
     // MARK: - Public Properties
     weak var view: WebViewViewControllerProtocol?
-    var authHelper: AuthHelperProtocol
+
+    // MARK: - Private Properties
+    private let authHelper: AuthHelperProtocol
 
     init(authHelper: AuthHelperProtocol) {
         self.authHelper = authHelper

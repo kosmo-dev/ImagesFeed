@@ -9,6 +9,11 @@
 import XCTest
 
 final class ImagesFeedUITests: XCTestCase {
+    let email = ""
+    let password = ""
+    let fullname = ""
+    let username = ""
+
     private let app = XCUIApplication()
 
     override func setUpWithError() throws {
@@ -25,13 +30,13 @@ final class ImagesFeedUITests: XCTestCase {
         let loginTextField = webView.descendants(matching: .textField).element
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
         loginTextField.tap()
-        loginTextField.typeText("email")
+        loginTextField.typeText(email)
         app.toolbars["Toolbar"].buttons["Done"].tap()
         
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         passwordTextField.tap()
-        passwordTextField.typeText("password")
+        passwordTextField.typeText(password)
 
         let loginButton = webView.descendants(matching: .button).element
         loginButton.tap()
@@ -61,7 +66,7 @@ final class ImagesFeedUITests: XCTestCase {
         image.pinch(withScale: 3, velocity: 1)
         image.pinch(withScale: 0.5, velocity: -1)
 
-        let navBackButton = app.buttons["NavigationBackButton"].tap()
+        app.buttons["NavigationBackButton"].tap()
 
     }
 
@@ -69,11 +74,14 @@ final class ImagesFeedUITests: XCTestCase {
         sleep(3)
         app.tabBars.buttons.element(boundBy: 1).tap()
 
-        XCTAssertTrue(app.staticTexts["FirstName LastNamed"].exists)
-        XCTAssertTrue(app.staticTexts["@username"].exists)
+        XCTAssertTrue(app.staticTexts[fullname].exists)
+        XCTAssertTrue(app.staticTexts[username].exists)
 
         app.buttons["Logout"].tap()
 
         app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
+
+        sleep(1)
+        XCTAssertTrue(app.staticTexts["Войти"].exists)
     }
 }
