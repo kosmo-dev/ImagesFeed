@@ -65,6 +65,40 @@ final class ProfileViewController: UIViewController {
         return exitButton
     }()
 
+    private let favouriteLabel: UILabel = {
+        let favouriteLabel = UILabel()
+        favouriteLabel.text = "Избранное"
+        favouriteLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        favouriteLabel.textColor = .white
+        favouriteLabel.translatesAutoresizingMaskIntoConstraints = false
+        print("favlabel")
+        return favouriteLabel
+    }()
+
+    private let favouriteCounterLabel: UILabel = {
+        let favouriteCounterLabel = UILabel()
+        favouriteCounterLabel.text = "1"
+        favouriteCounterLabel.font = UIFont.systemFont(ofSize: 13)
+        favouriteCounterLabel.textColor = .white
+        favouriteCounterLabel.textAlignment = .center
+        favouriteCounterLabel.translatesAutoresizingMaskIntoConstraints = false
+        return favouriteCounterLabel
+    }()
+
+    private let counterView: UIView = {
+        let counterView = UIView()
+        counterView.backgroundColor = .YPBlue
+        counterView.layer.cornerRadius = 10
+        counterView.layer.masksToBounds = true
+        counterView.translatesAutoresizingMaskIntoConstraints = false
+        return counterView
+    }()
+
+    private let userView: UIView = {
+        let userView = UIView()
+        return userView
+    }()
+
     // MARK: - Initializer
     init(presenter: ProfilePresenterProtocol) {
         self.presenter = presenter
@@ -81,7 +115,7 @@ final class ProfileViewController: UIViewController {
 
         presenter.view = self
 
-        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
+        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton, favouriteLabel, counterView, favouriteCounterLabel].forEach { view.addSubview($0) }
         view.backgroundColor = .YPBlack
         presenter.subscribeForAvatarUpdates()
         setAnimatableGradient()
@@ -107,7 +141,18 @@ final class ProfileViewController: UIViewController {
             descriptionLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
 
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -26),
-            exitButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
+            exitButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+
+            favouriteLabel.topAnchor.constraint(equalTo: loginLabel.bottomAnchor, constant: 24),
+            favouriteLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+
+            counterView.centerYAnchor.constraint(equalTo: favouriteLabel.centerYAnchor),
+            counterView.leadingAnchor.constraint(equalTo: favouriteLabel.trailingAnchor, constant: 8),
+
+            favouriteCounterLabel.topAnchor.constraint(equalTo: counterView.topAnchor, constant: 4),
+            favouriteCounterLabel.bottomAnchor.constraint(equalTo: counterView.bottomAnchor, constant: -4),
+            favouriteCounterLabel.leadingAnchor.constraint(equalTo: counterView.leadingAnchor, constant: 8),
+            favouriteCounterLabel.trailingAnchor.constraint(equalTo: counterView.trailingAnchor, constant: -8)
         ])
     }
 
