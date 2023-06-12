@@ -12,26 +12,37 @@ import Kingfisher
 
 protocol ProfilePresenterProtocol: AnyObject {
     var view: ProfileViewControllerProtocol? { get set }
+    var favouritePhotos: [Photo] { get }
     func logout()
     func subscribeForAvatarUpdates()
     func updateAvatar()
+    func configureCell(for cell: ImagesListCell, with indexPath: IndexPath)
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
     // MARK: - Public Properties
     weak var view: ProfileViewControllerProtocol?
+    private (set) var favouritePhotos: [Photo] = []
 
     // MARK: - Private Properties
     private var profileImageServiceObserver: NSObjectProtocol?
     private let profileImageService: ProfileImageServiceProtocol
     private let profileService: ProfileServiceProtocol
     private let imageDownloadHelper: ImageDownloadHelperProtocol
+    private let imageListService: ImageListServiceProtocol
 
     // MARK: Initializers
-    init(imageDownloadHelper: ImageDownloadHelperProtocol, profileService: ProfileServiceProtocol, profileImageService: ProfileImageServiceProtocol) {
+    init(imageDownloadHelper: ImageDownloadHelperProtocol, profileService: ProfileServiceProtocol, profileImageService: ProfileImageServiceProtocol, imageListService: ImageListServiceProtocol) {
         self.imageDownloadHelper = imageDownloadHelper
         self.profileService = profileService
         self.profileImageService = profileImageService
+        self.imageListService = imageListService
+
+        NotificationCenter.default.addObserver(forName: imageListService.didChangeLikeNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            self.getFavouritePhotos()
+            self.view?.reloadTablewView()
+        }
     }
 
     // MARK: - Public Methods
@@ -82,6 +93,42 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                 }
             }
         }
-    }    
+    }
+
+    func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+        let date = favouritePhotos[indexPath.row].createdAt
+        var dateString: String?
+        if let date {
+            dateString = dateFormatter.string(from: date)
+        }
+        guard let url = URL(string: favouritePhotos[indexPath.row].thumbImageURL) else { return }
+
+        imageDownloadHelper.fetchImage(url: url, options: nil) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let image):
+                view?.configureCellElements(cell: cell, image: image, date: dateString, isLiked: favouritePhotos[indexPath.row].isLiked, imageURL: url)
+            case .failure(_):
+                guard let placeholderImage = UIImage(named: C.UIImages.imagePlaceholder) else { return }
+                view?.configureCellElements(cell: cell, image: placeholderImage, date: nil, isLiked: false, imageURL: url)
+            }
+            self.view?.reloadRows(at: [indexPath], with: .automatic)
+        }
+    }
+
+    // MARK: - Private Methods
+    private func getFavouritePhotos() {
+        favouritePhotos = imageListService.photos.filter({ $0.isLiked })
+    }
+}
+
+// MARK: - DateFormatter
+extension ProfilePresenter {
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }
 }
 

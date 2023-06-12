@@ -11,6 +11,9 @@ protocol ProfileViewControllerProtocol: AnyObject {
     var presenter: ProfilePresenterProtocol { get }
     func updateProfileDetails(profile: Profile)
     func updateProfileImage(with image: UIImage)
+    func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL)
+    func reloadTablewView()
+    func reloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
 }
 
 final class ProfileViewController: UIViewController {
@@ -94,9 +97,12 @@ final class ProfileViewController: UIViewController {
         return counterView
     }()
 
-    private let userView: UIView = {
-        let userView = UIView()
-        return userView
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.separatorStyle = .none
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .YPBlack
+        return tableView
     }()
 
     // MARK: - Initializer
@@ -114,8 +120,11 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         presenter.view = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(ImagesListCell.self, forCellReuseIdentifier: "ImagesListCell")
 
-        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton, favouriteLabel, counterView, favouriteCounterLabel].forEach { view.addSubview($0) }
+        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton, favouriteLabel, counterView, favouriteCounterLabel, tableView].forEach { view.addSubview($0) }
         view.backgroundColor = .YPBlack
         presenter.subscribeForAvatarUpdates()
         setAnimatableGradient()
@@ -143,7 +152,7 @@ final class ProfileViewController: UIViewController {
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -26),
             exitButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
 
-            favouriteLabel.topAnchor.constraint(equalTo: loginLabel.bottomAnchor, constant: 24),
+            favouriteLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 24),
             favouriteLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
 
             counterView.centerYAnchor.constraint(equalTo: favouriteLabel.centerYAnchor),
@@ -152,7 +161,12 @@ final class ProfileViewController: UIViewController {
             favouriteCounterLabel.topAnchor.constraint(equalTo: counterView.topAnchor, constant: 4),
             favouriteCounterLabel.bottomAnchor.constraint(equalTo: counterView.bottomAnchor, constant: -4),
             favouriteCounterLabel.leadingAnchor.constraint(equalTo: counterView.leadingAnchor, constant: 8),
-            favouriteCounterLabel.trailingAnchor.constraint(equalTo: counterView.trailingAnchor, constant: -8)
+            favouriteCounterLabel.trailingAnchor.constraint(equalTo: counterView.trailingAnchor, constant: -8),
+
+            tableView.topAnchor.constraint(equalTo: favouriteLabel.bottomAnchor, constant: 8),
+            tableView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: exitButton.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8)
         ])
     }
 
@@ -196,6 +210,11 @@ final class ProfileViewController: UIViewController {
             layer.removeFromSuperlayer()
         }
     }
+
+    private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+        cell.setAnimatableGradient()
+        presenter.configureCell(for: cell, with: indexPath)
+    }
 }
 
 extension ProfileViewController: ProfileViewControllerProtocol {
@@ -208,5 +227,53 @@ extension ProfileViewController: ProfileViewControllerProtocol {
     func updateProfileImage(with image: UIImage) {
         removeGradient()
         imageView.image = image
+    }
+
+    func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL) {
+        cell.configureElements(image: image, date: date, isLiked: isLiked, imageURL: imageURL)
+    }
+
+    func reloadTablewView() {
+        tableView.reloadData()
+    }
+
+    func reloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
+        tableView.reloadRows(at: indexPaths, with: animation)
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension ProfileViewController: UITableViewDelegate {
+
+}
+
+// MARK: - UITableViewDataSource
+extension ProfileViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        presenter.favouritePhotos.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ImagesListCell", for: indexPath)
+
+        guard let imageListCell = cell as? ImagesListCell else {
+            return UITableViewCell()
+        }
+        imageListCell.backgroundColor = .YPBlack
+        imageListCell.selectionStyle = .none
+
+        imageListCell.delegate = self
+        configureCell(for: imageListCell, with: indexPath)
+        return imageListCell
+    }
+}
+
+extension ProfileViewController: ImagesListCellDelegate {
+    func imagesListCellLikeButtonTapped(_ cell: ImagesListCell) {
+
+    }
+
+    func cancelImageDownloadTask(for url: URL) {
+        
     }
 }

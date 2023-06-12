@@ -41,7 +41,7 @@ final class TabBarController: UITabBarController {
         let imagesListViewController = ImagesListViewController(presenter: imagesListPresenter)
         imagesListViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: C.UIImages.tabBarMain), selectedImage: nil)
 
-        let profilePresenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService)
+        let profilePresenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService, imageListService: imagesListService)
         let profileViewController = ProfileViewController(presenter: profilePresenter)
         profileViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: C.UIImages.tabBarProfile), selectedImage: nil)
 

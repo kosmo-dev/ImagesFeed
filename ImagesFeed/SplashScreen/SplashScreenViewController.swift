@@ -40,8 +40,7 @@ final class SplashScreenViewController: UIViewController {
         configureLayout()
 
         if let token = KeychainManager.shared.string(forKey: C.Keychain.accessToken) {
-            switchToTabBarController()
-//            fetchProfile(token: token)
+            fetchProfile(token: token)
         } else {
             presentAuthViewController()
         }

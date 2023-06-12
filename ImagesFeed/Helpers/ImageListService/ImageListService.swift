@@ -10,6 +10,7 @@ import Foundation
 protocol ImageListServiceProtocol {
     var photos: [Photo] { get }
     var didChangeNotification: Notification.Name { get }
+    var didChangeLikeNotification: Notification.Name { get }
     func fetchPhotosNextPage()
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void)
 }
@@ -23,6 +24,7 @@ final class ImageListService: ImageListServiceProtocol {
 
     private (set) var photos: [Photo] = []
     private (set) var didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    private (set) var didChangeLikeNotification = Notification.Name(rawValue: "ImagesListServiceDidChangeLike")
 
     private let urlSession = URLSession.shared
     private var lastLoadedPage: Int?
