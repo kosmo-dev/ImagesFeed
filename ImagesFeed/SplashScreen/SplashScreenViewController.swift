@@ -10,8 +10,6 @@ import ProgressHUD
 
 final class SplashScreenViewController: UIViewController {
     // MARK: - Private Properties
-    private let showBaseFlowSegueID = "showBaseFlow"
-    private let showAuthFlowSegueID = "showAuthFlow"
     private let profileService: ProfileServiceProtocol
     private let profileImageService: ProfileImageServiceProtocol
     private let oAuth2Service = Oauth2Service()
@@ -51,8 +49,8 @@ final class SplashScreenViewController: UIViewController {
             guard let self else { return }
             switch result {
             case .success(let profile):
-                profileImageService.fetchProfileImageURL(username: profile.username) { _ in
-                    self.switchToTabBarController()
+                profileImageService.fetchProfileImageURL(username: profile.username) { [weak self] _ in
+                    self?.switchToTabBarController()
                 }
                 UIBlockingProgressHUD.dismiss()
             case .failure(_):

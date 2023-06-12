@@ -16,7 +16,6 @@ protocol ImagesListViewControllerProtocol: AnyObject {
 
 final class ImagesListViewController: UIViewController {
     // MARK: - Private Properties
-    private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var presenter: ImagesListPresenterProtocol
 
     private let tableView: UITableView = {

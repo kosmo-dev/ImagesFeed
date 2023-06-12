@@ -16,8 +16,6 @@ final class AuthViewController: UIViewController {
     weak var delegate: AuthViewControllerDelegate?
 
     // MARK: - Private Properties
-    private let showWebViewSegueIdentifier = "ShowWebView"
-
     private let enterButton: UIButton = {
         let enterButton = UIButton()
         enterButton.setTitle("Войти", for: .normal)
