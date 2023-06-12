@@ -10,10 +10,8 @@ import ProgressHUD
 
 final class SplashScreenViewController: UIViewController {
     // MARK: - Private Properties
-    private let showBaseFlowSegueID = "showBaseFlow"
-    private let showAuthFlowSegueID = "showAuthFlow"
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
+    private let profileService: ProfileServiceProtocol
+    private let profileImageService: ProfileImageServiceProtocol
     private let oAuth2Service = Oauth2Service()
 
     private let imageView: UIImageView = {
@@ -22,6 +20,17 @@ final class SplashScreenViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
+
+    // MARK: - Initializers
+    init(profileService: ProfileServiceProtocol, profileImageService: ProfileImageServiceProtocol) {
+        self.profileService = profileService
+        self.profileImageService = profileImageService
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - View Life Cycle
     override func viewDidAppear(_ animated: Bool) {
@@ -40,8 +49,8 @@ final class SplashScreenViewController: UIViewController {
             guard let self else { return }
             switch result {
             case .success(let profile):
-                profileImageService.fetchProfileImageURL(username: profile.username) { _ in
-                    self.switchToTabBarController()
+                profileImageService.fetchProfileImageURL(username: profile.username) { [weak self] _ in
+                    self?.switchToTabBarController()
                 }
                 UIBlockingProgressHUD.dismiss()
             case .failure(_):
@@ -56,7 +65,7 @@ final class SplashScreenViewController: UIViewController {
             showAlertViewController()
             return
         }
-        let tabBarController = TabBarController()
+        let tabBarController = TabBarController(profileService: profileService, profileImageService: profileImageService)
         window.rootViewController = tabBarController
     }
 

@@ -7,18 +7,16 @@
 
 import Foundation
 
-final class ProfileService {
-    static let shared = ProfileService()
+protocol ProfileServiceProtocol {
+    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void )
+    var profile: Profile? { get }
+}
 
+final class ProfileService: ProfileServiceProtocol {
     // MARK: - Private Properties
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private (set) var profile: Profile?
-
-    // MARK: Private Initializer
-    private init(task: URLSessionTask? = nil) {
-        self.task = task
-    }
 
     // MARK: Public Methods
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void ) {
@@ -31,7 +29,7 @@ final class ProfileService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
-            guard let self else { print("self does not exist profileService"); return }
+            guard let self else { return }
             switch result {
             case .success(let data):
                 let profile = self.convertResponse(from: data)

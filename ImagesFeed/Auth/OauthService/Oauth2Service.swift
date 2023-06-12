@@ -34,7 +34,7 @@ final class Oauth2Service {
         request.httpMethod = "POST"
 
         let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<OauthTokenResponseBody, Error>) in
-            guard let self else { print("self is not exist"); return }
+            guard let self else { return }
             switch result {
             case .success(let data):
                 let authToken = data.accessToken

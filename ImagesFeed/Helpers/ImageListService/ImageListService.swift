@@ -7,17 +7,24 @@
 
 import Foundation
 
-final class ImageListService {
+protocol ImageListServiceProtocol {
+    var photos: [Photo] { get }
+    var didChangeNotification: Notification.Name { get }
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void)
+}
 
-    enum ImageListServiceError: Error {
+final class ImageListService: ImageListServiceProtocol {
+
+    private enum ImageListServiceError: Error {
         case incorrectURL
         case accessTokenNotFound
     }
 
-    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    private (set) var photos: [Photo] = []
+    private (set) var didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
 
     private let urlSession = URLSession.shared
-    private (set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
     private let dateFormatter = ISO8601DateFormatter()
@@ -25,7 +32,7 @@ final class ImageListService {
     func fetchPhotosNextPage() {
         guard task == nil else { return }
 
-        let nextPage = (lastLoadedPage ?? -1) + 1
+        let nextPage = (lastLoadedPage ?? 0) + 1
 
         var urlComponents = URLComponents(string: C.UnsplashAPI.baseURL)
         urlComponents?.path = "/photos"
@@ -48,7 +55,7 @@ final class ImageListService {
                         let photo = self.convertToPhotoFrom(photoResult)
                         self.photos.append(photo)
                     }
-                    NotificationCenter.default.post(name: ImageListService.didChangeNotification, object: nil)
+                    NotificationCenter.default.post(name: self.didChangeNotification, object: nil)
                     self.lastLoadedPage = nextPage
                     self.task = nil
                 }

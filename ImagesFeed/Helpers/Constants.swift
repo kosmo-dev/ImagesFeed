@@ -34,4 +34,12 @@ enum C {
     struct Keychain {
         static let accessToken = "accessToken"
     }
+
+    struct AccessibilityIdentifilers {
+        static let authenticateButton = "Authenticate"
+        static let unsplashWebView = "UnsplashWebView"
+        static let likeButton = "Like"
+        static let navigationBackButton = "NavigationBackButton"
+        static let logoutButton = "Logout"
+    }
 }

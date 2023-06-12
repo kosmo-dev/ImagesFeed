@@ -8,6 +8,19 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
+    private let profileService: ProfileServiceProtocol
+    private let profileImageService: ProfileImageServiceProtocol
+
+    init(profileService: ProfileServiceProtocol, profileImageService: ProfileImageServiceProtocol) {
+        self.profileService = profileService
+        self.profileImageService = profileImageService
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBar.isTranslucent = false
@@ -21,12 +34,15 @@ final class TabBarController: UITabBarController {
             tabBar.standardAppearance = appearance
             tabBar.scrollEdgeAppearance = appearance
         }
-
-
-        let imagesListViewController = ImagesListViewController()
+        let imageDownloadHelper = ImageDownloadHelper()
+        let imagesListService = ImageListService()
+        
+        let imagesListPresenter = ImagesListPresenter(imageDownloadHelper: imageDownloadHelper, imageListService: imagesListService)
+        let imagesListViewController = ImagesListViewController(presenter: imagesListPresenter)
         imagesListViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: C.UIImages.tabBarMain), selectedImage: nil)
 
-        let profileViewController = ProfileViewController()
+        let profilePresenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService)
+        let profileViewController = ProfileViewController(presenter: profilePresenter)
         profileViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: C.UIImages.tabBarProfile), selectedImage: nil)
 
         self.viewControllers = [imagesListViewController, profileViewController]
