@@ -18,6 +18,7 @@ protocol ProfilePresenterProtocol: AnyObject {
     func updateAvatar()
     func configureCell(for cell: ImagesListCell, with indexPath: IndexPath)
     func cancelImageDownloadTask(for url: URL)
+    func likeButtonTapped(for indexPath: IndexPath, completion: @escaping (Bool) -> Void)
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
@@ -122,9 +123,29 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         imageDownloadHelper.cancelImageDownload(for: url)
     }
 
+    func likeButtonTapped(for indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
+        let photo = favouritePhotos[indexPath.row]
+        imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self.setPhotos(self.imageListService.favouritePhotos)
+                    completion(true)
+                }
+            case .failure(_):
+                completion(false)
+            }
+        }
+    }
+
     // MARK: - Private Methods
     private func updateCounter() {
         view?.updateCounter(newValue: favouritePhotos.count)
+    }
+
+    private func setPhotos(_ photos: [Photo]) {
+        self.favouritePhotos = photos
     }
 }
 

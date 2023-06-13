@@ -23,6 +23,7 @@ enum C {
         static let imagePlaceholder = "ImagePlaceholder"
         static let likeCircleButtonActive = "LikeСircleButtonActive"
         static let likeCircleButtonNotActive = "LikeСircleButtonNotActive"
+        static let noFavourites = "square.3.layers.3d.down.forward"
     }
     struct UnsplashAPI {
         static let accessKey = "Dv0ldX5teKBEmM_b8wyGkiGIC9zWb5yt5LBcK6qVn-8"

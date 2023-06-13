@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol ProfileViewControllerProtocol: AnyObject {
     var presenter: ProfilePresenterProtocol { get }
@@ -106,6 +107,15 @@ final class ProfileViewController: UIViewController {
         return tableView
     }()
 
+    private let noFavouritesImageView: UIImageView = {
+        let noFavouritesImageView = UIImageView()
+        noFavouritesImageView.image = UIImage(systemName: C.UIImages.noFavourites)
+        noFavouritesImageView.tintColor = .white
+        noFavouritesImageView.contentMode = .scaleAspectFill
+        noFavouritesImageView.translatesAutoresizingMaskIntoConstraints = false
+        return noFavouritesImageView
+    }()
+
     // MARK: - Initializer
     init(presenter: ProfilePresenterProtocol) {
         self.presenter = presenter
@@ -125,7 +135,7 @@ final class ProfileViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(ImagesListCell.self, forCellReuseIdentifier: "ImagesListCell")
 
-        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton, favouriteLabel, counterView, favouriteCounterLabel, tableView].forEach { view.addSubview($0) }
+        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton, favouriteLabel, counterView, favouriteCounterLabel, tableView, noFavouritesImageView].forEach { view.addSubview($0) }
         view.backgroundColor = .YPBlack
         presenter.subscribeForAvatarUpdates()
         setAnimatableGradient()
@@ -168,7 +178,11 @@ final class ProfileViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: favouriteLabel.bottomAnchor, constant: 18),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8),
+
+            noFavouritesImageView.topAnchor.constraint(equalTo: favouriteLabel.bottomAnchor, constant: 110),
+            noFavouritesImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 130),
+            noFavouritesImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -130)
         ])
     }
 
@@ -214,7 +228,6 @@ final class ProfileViewController: UIViewController {
     }
 
     private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-//        cell.setAnimatableGradient()
         presenter.configureCell(for: cell, with: indexPath)
     }
 
@@ -223,10 +236,12 @@ final class ProfileViewController: UIViewController {
             counterView.isHidden = true
             favouriteCounterLabel.isHidden = true
             tableView.isHidden = true
+            noFavouritesImageView.isHidden = false
         } else {
             counterView.isHidden = false
             favouriteCounterLabel.isHidden = false
             tableView.isHidden = false
+            noFavouritesImageView.isHidden = true
         }
     }
 }
@@ -294,6 +309,14 @@ extension ProfileViewController: UITableViewDataSource {
 
 extension ProfileViewController: ImagesListCellDelegate {
     func imagesListCellLikeButtonTapped(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        UIBlockingProgressHUD.show()
+        presenter.likeButtonTapped(for: indexPath) {[weak self] isSucceed in
+            if isSucceed {
+                self?.tableView.reloadData()
+            }
+            UIBlockingProgressHUD.dismiss()
+        }
     }
 
     func cancelImageDownloadTask(for url: URL) {
