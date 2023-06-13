@@ -25,6 +25,8 @@ final class ProfileViewController: UIViewController {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .YPGray
+        imageView.layer.cornerRadius = 35
+        imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

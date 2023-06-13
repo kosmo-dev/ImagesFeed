@@ -65,8 +65,10 @@ final class ImagesListViewController: UIViewController {
     }
 
     private func presentSingleImageView(for indexPath: IndexPath) {
-        guard let url = URL(string: presenter.photos[indexPath.row].largeImageURL) else { return }
-        let viewController = SingleImageViewController(url: url)
+        let photo = presenter.photos[indexPath.row]
+        guard let url = URL(string: photo.largeImageURL) else { return }
+        let viewController = SingleImageViewController(url: url, isLiked: photo.isLiked, indexPath: indexPath)
+        viewController.delegate = self
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: true)
     }
@@ -155,5 +157,18 @@ extension ImagesListViewController: ImagesListViewControllerProtocol {
             tableView.insertRows(at: indexPaths, with: .automatic)
         }
     }
+}
+
+// MARK: - SingleImageViewControllerDelegate
+extension ImagesListViewController: SingleImageViewControllerDelegate {
+    func didTapLikeButton(for indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
+        presenter.likeButtonTapped(for: indexPath) {[weak self] isSucceed in
+            if isSucceed {
+                self?.tableView.reloadRows(at: [indexPath], with: .none)
+                completion(true)
+            }
+        }
+    }
+
 }
 
