@@ -9,6 +9,7 @@ import Foundation
 
 protocol ImageListServiceProtocol {
     var photos: [Photo] { get }
+    var favouritePhotos: [Photo] { get }
     var didChangeNotification: Notification.Name { get }
     var didChangeLikeNotification: Notification.Name { get }
     func fetchPhotosNextPage()
@@ -23,6 +24,7 @@ final class ImageListService: ImageListServiceProtocol {
     }
 
     private (set) var photos: [Photo] = []
+    private (set) var favouritePhotos: [Photo] = []
     private (set) var didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     private (set) var didChangeLikeNotification = Notification.Name(rawValue: "ImagesListServiceDidChangeLike")
 
@@ -104,6 +106,8 @@ final class ImageListService: ImageListServiceProtocol {
                             isLiked: isLike
                         )
                         self.photos[index] = newPhoto
+                        self.manageFavouritePhoto(newPhoto, isLiked: isLike)
+                        NotificationCenter.default.post(name: self.didChangeLikeNotification, object: nil)
                         completion(.success(()))
                     }
                 }
@@ -126,5 +130,14 @@ final class ImageListService: ImageListServiceProtocol {
             isLiked: photoResult.isLiked
         )
         return photo
+    }
+
+    private func manageFavouritePhoto(_ photo: Photo, isLiked: Bool) {
+        if isLiked {
+            favouritePhotos.append(photo)
+        } else {
+            guard let index = favouritePhotos.firstIndex(where: { $0.id == photo.id }) else { return }
+            favouritePhotos.remove(at: index)
+        }
     }
 }

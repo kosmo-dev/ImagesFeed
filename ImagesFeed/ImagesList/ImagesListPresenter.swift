@@ -54,7 +54,6 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
                 guard let placeholderImage = UIImage(named: C.UIImages.imagePlaceholder) else { return }
                 view?.configureCellElements(cell: cell, image: placeholderImage, date: nil, isLiked: false, imageURL: url)
             }
-            self.view?.reloadRows(at: [indexPath], with: .automatic)
         }
     }
 

@@ -9,7 +9,6 @@ import UIKit
 import ProgressHUD
 
 protocol ImagesListViewControllerProtocol: AnyObject {
-    func reloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL)
     func updateTableViewAnimated(from oldCount: Int, to newCount: Int)
 }
@@ -143,10 +142,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
 
 // MARK: - ImagesListViewControllerProtocol
 extension ImagesListViewController: ImagesListViewControllerProtocol {
-    func reloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
-        tableView.reloadRows(at: indexPaths, with: animation)
-    }
-
     func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL) {
         cell.configureElements(image: image, date: date, isLiked: isLiked, imageURL: imageURL)
     }

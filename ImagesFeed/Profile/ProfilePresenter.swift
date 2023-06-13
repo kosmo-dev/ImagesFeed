@@ -17,6 +17,7 @@ protocol ProfilePresenterProtocol: AnyObject {
     func subscribeForAvatarUpdates()
     func updateAvatar()
     func configureCell(for cell: ImagesListCell, with indexPath: IndexPath)
+    func cancelImageDownloadTask(for url: URL)
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
@@ -37,11 +38,13 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         self.profileService = profileService
         self.profileImageService = profileImageService
         self.imageListService = imageListService
+        self.favouritePhotos = imageListService.favouritePhotos
 
         NotificationCenter.default.addObserver(forName: imageListService.didChangeLikeNotification, object: nil, queue: .main) { [weak self] _ in
             guard let self else { return }
-            self.getFavouritePhotos()
-            self.view?.reloadTablewView()
+            self.favouritePhotos = imageListService.favouritePhotos
+            updateCounter()
+            self.view?.reloadTableView()
         }
     }
 
@@ -107,18 +110,21 @@ final class ProfilePresenter: ProfilePresenterProtocol {
             guard let self else { return }
             switch result {
             case .success(let image):
-                view?.configureCellElements(cell: cell, image: image, date: dateString, isLiked: favouritePhotos[indexPath.row].isLiked, imageURL: url)
+                self.view?.configureCellElements(cell: cell, image: image, date: dateString, isLiked: self.favouritePhotos[indexPath.row].isLiked, imageURL: url)
             case .failure(_):
                 guard let placeholderImage = UIImage(named: C.UIImages.imagePlaceholder) else { return }
-                view?.configureCellElements(cell: cell, image: placeholderImage, date: nil, isLiked: false, imageURL: url)
+                self.view?.configureCellElements(cell: cell, image: placeholderImage, date: nil, isLiked: false, imageURL: url)
             }
-            self.view?.reloadRows(at: [indexPath], with: .automatic)
         }
     }
 
+    func cancelImageDownloadTask(for url: URL) {
+        imageDownloadHelper.cancelImageDownload(for: url)
+    }
+
     // MARK: - Private Methods
-    private func getFavouritePhotos() {
-        favouritePhotos = imageListService.photos.filter({ $0.isLiked })
+    private func updateCounter() {
+        view?.updateCounter(newValue: favouritePhotos.count)
     }
 }
 

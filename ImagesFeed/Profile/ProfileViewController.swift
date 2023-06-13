@@ -12,8 +12,8 @@ protocol ProfileViewControllerProtocol: AnyObject {
     func updateProfileDetails(profile: Profile)
     func updateProfileImage(with image: UIImage)
     func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL)
-    func reloadTablewView()
-    func reloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
+    func reloadTableView()
+    func updateCounter(newValue: Int)
 }
 
 final class ProfileViewController: UIViewController {
@@ -74,13 +74,12 @@ final class ProfileViewController: UIViewController {
         favouriteLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         favouriteLabel.textColor = .white
         favouriteLabel.translatesAutoresizingMaskIntoConstraints = false
-        print("favlabel")
         return favouriteLabel
     }()
 
     private let favouriteCounterLabel: UILabel = {
         let favouriteCounterLabel = UILabel()
-        favouriteCounterLabel.text = "1"
+        favouriteCounterLabel.text = "0"
         favouriteCounterLabel.font = UIFont.systemFont(ofSize: 13)
         favouriteCounterLabel.textColor = .white
         favouriteCounterLabel.textAlignment = .center
@@ -130,6 +129,7 @@ final class ProfileViewController: UIViewController {
         setAnimatableGradient()
         presenter.updateAvatar()
         configureConstraints()
+        updateCounter(newValue: presenter.favouritePhotos.count)
     }
 
     // MARK: - Private Methods
@@ -158,14 +158,14 @@ final class ProfileViewController: UIViewController {
             counterView.centerYAnchor.constraint(equalTo: favouriteLabel.centerYAnchor),
             counterView.leadingAnchor.constraint(equalTo: favouriteLabel.trailingAnchor, constant: 8),
 
-            favouriteCounterLabel.topAnchor.constraint(equalTo: counterView.topAnchor, constant: 4),
-            favouriteCounterLabel.bottomAnchor.constraint(equalTo: counterView.bottomAnchor, constant: -4),
-            favouriteCounterLabel.leadingAnchor.constraint(equalTo: counterView.leadingAnchor, constant: 8),
-            favouriteCounterLabel.trailingAnchor.constraint(equalTo: counterView.trailingAnchor, constant: -8),
+            favouriteCounterLabel.topAnchor.constraint(equalTo: counterView.topAnchor, constant: 2),
+            favouriteCounterLabel.bottomAnchor.constraint(equalTo: counterView.bottomAnchor, constant: -2),
+            favouriteCounterLabel.leadingAnchor.constraint(equalTo: counterView.leadingAnchor, constant: 12),
+            favouriteCounterLabel.trailingAnchor.constraint(equalTo: counterView.trailingAnchor, constant: -12),
 
-            tableView.topAnchor.constraint(equalTo: favouriteLabel.bottomAnchor, constant: 8),
-            tableView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: exitButton.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: favouriteLabel.bottomAnchor, constant: 18),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8)
         ])
     }
@@ -212,11 +212,24 @@ final class ProfileViewController: UIViewController {
     }
 
     private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        cell.setAnimatableGradient()
+//        cell.setAnimatableGradient()
         presenter.configureCell(for: cell, with: indexPath)
+    }
+
+    private func manageCounterAndTableView(counterValue: Int) {
+        if counterValue == 0 {
+            counterView.isHidden = true
+            favouriteCounterLabel.isHidden = true
+            tableView.isHidden = true
+        } else {
+            counterView.isHidden = false
+            favouriteCounterLabel.isHidden = false
+            tableView.isHidden = false
+        }
     }
 }
 
+// MARK: - ProfileViewControllerProtocol
 extension ProfileViewController: ProfileViewControllerProtocol {
     func updateProfileDetails(profile: Profile) {
         nameLabel.text = profile.name
@@ -233,24 +246,33 @@ extension ProfileViewController: ProfileViewControllerProtocol {
         cell.configureElements(image: image, date: date, isLiked: isLiked, imageURL: imageURL)
     }
 
-    func reloadTablewView() {
+    func reloadTableView() {
         tableView.reloadData()
     }
 
-    func reloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
-        tableView.reloadRows(at: indexPaths, with: animation)
+    func updateCounter(newValue: Int) {
+        manageCounterAndTableView(counterValue: newValue)
+        favouriteCounterLabel.text = "\(newValue)"
     }
 }
 
 // MARK: - UITableViewDelegate
 extension ProfileViewController: UITableViewDelegate {
-
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let image = presenter.favouritePhotos[indexPath.row]
+        let imageWidth = image.size.width
+        let cellInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+        let tableViewCellWidth = tableView.bounds.width - cellInsets.left - cellInsets.right
+        let multiplier = tableViewCellWidth / imageWidth
+        let cellHeight = image.size.height * multiplier + cellInsets.top + cellInsets.bottom
+        return cellHeight
+    }
 }
 
 // MARK: - UITableViewDataSource
 extension ProfileViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.favouritePhotos.count
+        return presenter.favouritePhotos.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -270,10 +292,9 @@ extension ProfileViewController: UITableViewDataSource {
 
 extension ProfileViewController: ImagesListCellDelegate {
     func imagesListCellLikeButtonTapped(_ cell: ImagesListCell) {
-
     }
 
     func cancelImageDownloadTask(for url: URL) {
-        
+        presenter.cancelImageDownloadTask(for: url)
     }
 }
