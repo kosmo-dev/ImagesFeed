@@ -9,9 +9,9 @@ import UIKit
 import ProgressHUD
 
 protocol ImagesListViewControllerProtocol: AnyObject {
-    func reloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation)
     func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL)
     func updateTableViewAnimated(from oldCount: Int, to newCount: Int)
+    func reloadTableView()
 }
 
 final class ImagesListViewController: UIViewController {
@@ -65,8 +65,10 @@ final class ImagesListViewController: UIViewController {
     }
 
     private func presentSingleImageView(for indexPath: IndexPath) {
-        guard let url = URL(string: presenter.photos[indexPath.row].largeImageURL) else { return }
-        let viewController = SingleImageViewController(url: url)
+        let photo = presenter.photos[indexPath.row]
+        guard let url = URL(string: photo.largeImageURL) else { return }
+        let viewController = SingleImageViewController(url: url, isLiked: photo.isLiked, indexPath: indexPath)
+        viewController.delegate = self
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: true)
     }
@@ -142,10 +144,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
 
 // MARK: - ImagesListViewControllerProtocol
 extension ImagesListViewController: ImagesListViewControllerProtocol {
-    func reloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
-        tableView.reloadRows(at: indexPaths, with: animation)
-    }
-
     func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL) {
         cell.configureElements(image: image, date: date, isLiked: isLiked, imageURL: imageURL)
     }
@@ -159,5 +157,22 @@ extension ImagesListViewController: ImagesListViewControllerProtocol {
             tableView.insertRows(at: indexPaths, with: .automatic)
         }
     }
+
+    func reloadTableView() {
+        tableView.reloadData()
+    }
+}
+
+// MARK: - SingleImageViewControllerDelegate
+extension ImagesListViewController: SingleImageViewControllerDelegate {
+    func didTapLikeButton(for indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
+        presenter.likeButtonTapped(for: indexPath) {[weak self] isSucceed in
+            if isSucceed {
+                self?.tableView.reloadRows(at: [indexPath], with: .none)
+                completion(true)
+            }
+        }
+    }
+
 }
 

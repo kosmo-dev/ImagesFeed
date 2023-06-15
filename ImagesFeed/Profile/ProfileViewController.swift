@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol ProfileViewControllerProtocol: AnyObject {
     var presenter: ProfilePresenterProtocol { get }
     func updateProfileDetails(profile: Profile)
     func updateProfileImage(with image: UIImage)
+    func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL)
+    func reloadTableView()
+    func updateCounter(newValue: Int)
 }
 
 final class ProfileViewController: UIViewController {
@@ -22,6 +26,8 @@ final class ProfileViewController: UIViewController {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .YPGray
+        imageView.layer.cornerRadius = 35
+        imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -65,6 +71,51 @@ final class ProfileViewController: UIViewController {
         return exitButton
     }()
 
+    private let favouriteLabel: UILabel = {
+        let favouriteLabel = UILabel()
+        favouriteLabel.text = "Избранное"
+        favouriteLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        favouriteLabel.textColor = .white
+        favouriteLabel.translatesAutoresizingMaskIntoConstraints = false
+        return favouriteLabel
+    }()
+
+    private let favouriteCounterLabel: UILabel = {
+        let favouriteCounterLabel = UILabel()
+        favouriteCounterLabel.text = "0"
+        favouriteCounterLabel.font = UIFont.systemFont(ofSize: 13)
+        favouriteCounterLabel.textColor = .white
+        favouriteCounterLabel.textAlignment = .center
+        favouriteCounterLabel.translatesAutoresizingMaskIntoConstraints = false
+        return favouriteCounterLabel
+    }()
+
+    private let counterView: UIView = {
+        let counterView = UIView()
+        counterView.backgroundColor = .YPBlue
+        counterView.layer.cornerRadius = 10
+        counterView.layer.masksToBounds = true
+        counterView.translatesAutoresizingMaskIntoConstraints = false
+        return counterView
+    }()
+
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.separatorStyle = .none
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .YPBlack
+        return tableView
+    }()
+
+    private let noFavouritesImageView: UIImageView = {
+        let noFavouritesImageView = UIImageView()
+        noFavouritesImageView.image = UIImage(systemName: C.UIImages.noFavourites)
+        noFavouritesImageView.tintColor = .white
+        noFavouritesImageView.contentMode = .scaleAspectFill
+        noFavouritesImageView.translatesAutoresizingMaskIntoConstraints = false
+        return noFavouritesImageView
+    }()
+
     // MARK: - Initializer
     init(presenter: ProfilePresenterProtocol) {
         self.presenter = presenter
@@ -80,13 +131,17 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         presenter.view = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(ImagesListCell.self, forCellReuseIdentifier: "ImagesListCell")
 
-        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton].forEach { view.addSubview($0) }
+        [imageView, nameLabel, loginLabel, descriptionLabel, exitButton, favouriteLabel, counterView, favouriteCounterLabel, tableView, noFavouritesImageView].forEach { view.addSubview($0) }
         view.backgroundColor = .YPBlack
         presenter.subscribeForAvatarUpdates()
         setAnimatableGradient()
         presenter.updateAvatar()
         configureConstraints()
+        updateCounter(newValue: presenter.favouritePhotos.count)
     }
 
     // MARK: - Private Methods
@@ -107,7 +162,27 @@ final class ProfileViewController: UIViewController {
             descriptionLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
 
             exitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -26),
-            exitButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
+            exitButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+
+            favouriteLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 24),
+            favouriteLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+
+            counterView.centerYAnchor.constraint(equalTo: favouriteLabel.centerYAnchor),
+            counterView.leadingAnchor.constraint(equalTo: favouriteLabel.trailingAnchor, constant: 8),
+
+            favouriteCounterLabel.topAnchor.constraint(equalTo: counterView.topAnchor, constant: 2),
+            favouriteCounterLabel.bottomAnchor.constraint(equalTo: counterView.bottomAnchor, constant: -2),
+            favouriteCounterLabel.leadingAnchor.constraint(equalTo: counterView.leadingAnchor, constant: 12),
+            favouriteCounterLabel.trailingAnchor.constraint(equalTo: counterView.trailingAnchor, constant: -12),
+
+            tableView.topAnchor.constraint(equalTo: favouriteLabel.bottomAnchor, constant: 18),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8),
+
+            noFavouritesImageView.topAnchor.constraint(equalTo: favouriteLabel.bottomAnchor, constant: 110),
+            noFavouritesImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 130),
+            noFavouritesImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -130)
         ])
     }
 
@@ -151,8 +226,27 @@ final class ProfileViewController: UIViewController {
             layer.removeFromSuperlayer()
         }
     }
+
+    private func configureCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+        presenter.configureCell(for: cell, with: indexPath)
+    }
+
+    private func manageCounterAndTableView(counterValue: Int) {
+        if counterValue == 0 {
+            counterView.isHidden = true
+            favouriteCounterLabel.isHidden = true
+            tableView.isHidden = true
+            noFavouritesImageView.isHidden = false
+        } else {
+            counterView.isHidden = false
+            favouriteCounterLabel.isHidden = false
+            tableView.isHidden = false
+            noFavouritesImageView.isHidden = true
+        }
+    }
 }
 
+// MARK: - ProfileViewControllerProtocol
 extension ProfileViewController: ProfileViewControllerProtocol {
     func updateProfileDetails(profile: Profile) {
         nameLabel.text = profile.name
@@ -163,5 +257,69 @@ extension ProfileViewController: ProfileViewControllerProtocol {
     func updateProfileImage(with image: UIImage) {
         removeGradient()
         imageView.image = image
+    }
+
+    func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL) {
+        cell.configureElements(image: image, date: date, isLiked: isLiked, imageURL: imageURL)
+    }
+
+    func reloadTableView() {
+        tableView.reloadData()
+    }
+
+    func updateCounter(newValue: Int) {
+        manageCounterAndTableView(counterValue: newValue)
+        favouriteCounterLabel.text = "\(newValue)"
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension ProfileViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let image = presenter.favouritePhotos[indexPath.row]
+        let imageWidth = image.size.width
+        let cellInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+        let tableViewCellWidth = tableView.bounds.width - cellInsets.left - cellInsets.right
+        let multiplier = tableViewCellWidth / imageWidth
+        let cellHeight = image.size.height * multiplier + cellInsets.top + cellInsets.bottom
+        return cellHeight
+    }
+}
+
+// MARK: - UITableViewDataSource
+extension ProfileViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return presenter.favouritePhotos.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ImagesListCell", for: indexPath)
+
+        guard let imageListCell = cell as? ImagesListCell else {
+            return UITableViewCell()
+        }
+        imageListCell.backgroundColor = .YPBlack
+        imageListCell.selectionStyle = .none
+
+        imageListCell.delegate = self
+        configureCell(for: imageListCell, with: indexPath)
+        return imageListCell
+    }
+}
+
+extension ProfileViewController: ImagesListCellDelegate {
+    func imagesListCellLikeButtonTapped(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        UIBlockingProgressHUD.show()
+        presenter.likeButtonTapped(for: indexPath) {[weak self] isSucceed in
+            if isSucceed {
+                self?.tableView.reloadData()
+            }
+            UIBlockingProgressHUD.dismiss()
+        }
+    }
+
+    func cancelImageDownloadTask(for url: URL) {
+        presenter.cancelImageDownloadTask(for: url)
     }
 }

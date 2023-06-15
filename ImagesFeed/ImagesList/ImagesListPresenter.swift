@@ -34,6 +34,11 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         NotificationCenter.default.addObserver(forName: imageListService.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
             self?.updateTableView()
         }
+
+        NotificationCenter.default.addObserver(forName: imageListService.didChangeLikeNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.setPhotos(imageListService.photos)
+            self?.view?.reloadTableView()
+        }
     }
 
     // MARK: - Public Methods
@@ -54,7 +59,6 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
                 guard let placeholderImage = UIImage(named: C.UIImages.imagePlaceholder) else { return }
                 view?.configureCellElements(cell: cell, image: placeholderImage, date: nil, isLiked: false, imageURL: url)
             }
-            self.view?.reloadRows(at: [indexPath], with: .automatic)
         }
     }
 

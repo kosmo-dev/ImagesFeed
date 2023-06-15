@@ -25,4 +25,9 @@ final class ProfileViewControllerSpy: ProfileViewControllerProtocol {
     func updateProfileImage(with image: UIImage) {
         self.image = image
     }
+    func configureCellElements(cell: ImagesFeed.ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL) {}
+
+    func reloadTableView() {}
+
+    func updateCounter(newValue: Int) {}
 }

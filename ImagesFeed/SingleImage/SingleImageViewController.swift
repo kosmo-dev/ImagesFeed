@@ -8,9 +8,16 @@
 import UIKit
 import ProgressHUD
 
+protocol SingleImageViewControllerDelegate: AnyObject {
+    func didTapLikeButton(for indexPath: IndexPath, completion: @escaping (Bool) -> Void)
+}
+
 final class SingleImageViewController: UIViewController {
     // MARK: - Public Properties
-    var url: URL?
+    var url: URL
+    var isLiked: Bool
+    var delegate: SingleImageViewControllerDelegate?
+    var indexPath: IndexPath
 
     // MARK: - Private Properties
     private let imageView: UIImageView = {
@@ -49,10 +56,22 @@ final class SingleImageViewController: UIViewController {
         return sharingButton
     }()
 
+    private let likeButton: UIButton = {
+        let likeButton = UIButton()
+        likeButton.setImage(UIImage(named: C.UIImages.likeCircleButtonNotActive), for: .normal)
+        likeButton.addTarget(nil, action: #selector(didTapLikeButton), for: .touchUpInside)
+        likeButton.setTitle("", for: .normal)
+        likeButton.imageView?.contentMode = .scaleAspectFill
+        likeButton.translatesAutoresizingMaskIntoConstraints = false
+        return likeButton
+    }()
+
     // MARK: - Initializer
-    init(url: URL) {
-        super.init(nibName: nil, bundle: nil)
+    init(url: URL, isLiked: Bool, indexPath: IndexPath) {
         self.url = url
+        self.isLiked = isLiked
+        self.indexPath = indexPath
+        super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -66,6 +85,10 @@ final class SingleImageViewController: UIViewController {
 
         fetchPhoto()
         scrollView.delegate = self
+
+        if isLiked {
+            likeButton.setImage(UIImage(named: C.UIImages.likeCircleButtonActive), for: .normal)
+        }
     }
 
     // MARK: - Private Method
@@ -76,6 +99,16 @@ final class SingleImageViewController: UIViewController {
         guard let image = imageView.image else { return }
         let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityViewController, animated: true)
+    }
+
+    @objc private func didTapLikeButton() {
+        UIBlockingProgressHUD.show()
+        delegate?.didTapLikeButton(for: indexPath, completion: { [weak self] isSucceed in
+            if isSucceed {
+                self?.changeLikeButton()
+            }
+            UIBlockingProgressHUD.dismiss()
+        })
     }
 
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
@@ -96,7 +129,6 @@ final class SingleImageViewController: UIViewController {
     }
 
     private func fetchPhoto() {
-        guard let url else { return }
         UIBlockingProgressHUD.show()
         imageView.kf.setImage(with: url) { [weak self] result in
             UIBlockingProgressHUD.dismiss()
@@ -112,12 +144,15 @@ final class SingleImageViewController: UIViewController {
     }
 
     private func configureLayout() {
+        let viewWidth = view.bounds.width
+        let buttonConstraint = viewWidth / 3 - 40
         view.backgroundColor = .YPBlack
 
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
         view.addSubview(backButton)
         view.addSubview(sharingButton)
+        view.addSubview(likeButton)
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -135,10 +170,15 @@ final class SingleImageViewController: UIViewController {
             backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 11),
             backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 9),
 
+            likeButton.widthAnchor.constraint(equalToConstant: 50),
+            likeButton.heightAnchor.constraint(equalToConstant: 50),
+            likeButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -51),
+            likeButton.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: buttonConstraint),
+
             sharingButton.widthAnchor.constraint(equalToConstant: 50),
             sharingButton.heightAnchor.constraint(equalToConstant: 50),
-            sharingButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            sharingButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -51)
+            sharingButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -buttonConstraint),
+            sharingButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -51),
         ])
     }
 
@@ -153,6 +193,15 @@ final class SingleImageViewController: UIViewController {
         alertVC.addAction(againAction)
         alertVC.addAction(cancelAction)
         present(alertVC, animated: true)
+    }
+
+    private func changeLikeButton() {
+        isLiked = !isLiked
+        if isLiked {
+            likeButton.setImage(UIImage(named: C.UIImages.likeCircleButtonActive), for: .normal)
+        } else {
+            likeButton.setImage(UIImage(named: C.UIImages.likeCircleButtonNotActive), for: .normal)
+        }
     }
 }
 

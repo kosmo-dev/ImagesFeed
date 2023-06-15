@@ -16,7 +16,8 @@ final class ProfileViewTests: XCTestCase {
         let imageDownloadHelper = ImageDownloadHelperStub()
         let profileService = ProfileServiceStub()
         let profileImageService = ProfileImageServiceStub()
-        let presenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService)
+        let imageListService = ImageListServiceStub()
+        let presenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService, imageListService: imageListService)
         let viewController = ProfileViewControllerSpy(presenter: presenter)
 
         // When
@@ -32,7 +33,8 @@ final class ProfileViewTests: XCTestCase {
         let imageDownloadHelper = ImageDownloadHelperStub()
         let profileService = ProfileServiceStub()
         let profileImageService = ProfileImageServiceStub()
-        let presenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService)
+        let imageListService = ImageListServiceStub()
+        let presenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService, imageListService: imageListService)
         let viewController = ProfileViewControllerSpy(presenter: presenter)
 
         // When
@@ -47,7 +49,8 @@ final class ProfileViewTests: XCTestCase {
         let imageDownloadHelper = ImageDownloadHelperStub()
         let profileService = ProfileServiceStub()
         let profileImageService = ProfileImageServiceStub()
-        let presenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService)
+        let imageListService = ImageListServiceStub()
+        let presenter = ProfilePresenter(imageDownloadHelper: imageDownloadHelper, profileService: profileService, profileImageService: profileImageService, imageListService: imageListService)
         let viewController = ProfileViewControllerSpy(presenter: presenter)
 
         // When
