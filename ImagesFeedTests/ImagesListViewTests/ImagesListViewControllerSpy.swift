@@ -22,4 +22,6 @@ final class ImagesListViewControllerSpy: ImagesListViewControllerProtocol {
     func updateTableViewAnimated(from oldCount: Int, to newCount: Int) {
         updateTableViewAnimatedIsCalled = true
     }
+    
+    func reloadTableView() {}
 }
