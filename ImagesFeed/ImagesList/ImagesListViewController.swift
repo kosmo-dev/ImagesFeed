@@ -11,6 +11,7 @@ import ProgressHUD
 protocol ImagesListViewControllerProtocol: AnyObject {
     func configureCellElements(cell: ImagesListCell, image: UIImage, date: String?, isLiked: Bool, imageURL: URL)
     func updateTableViewAnimated(from oldCount: Int, to newCount: Int)
+    func reloadTableView()
 }
 
 final class ImagesListViewController: UIViewController {
@@ -156,6 +157,10 @@ extension ImagesListViewController: ImagesListViewControllerProtocol {
             }
             tableView.insertRows(at: indexPaths, with: .automatic)
         }
+    }
+
+    func reloadTableView() {
+        tableView.reloadData()
     }
 }
 
