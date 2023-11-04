@@ -37,3 +37,4 @@
 - OAuth 2.0
 - Swift Package Manager
 - Kingfisher
+- Unit, UI тесты
